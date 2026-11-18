@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "0.4",
+  "project": {
+    "name": "Requests",
+    "displayName": "Requests HTTP 库",
+    "url": "https://github.com/psf/requests",
+    "snapshotCommit": "611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60",
+    "snapshotDate": "2026-09-21",
+    "license": {
+      "spdx": "Apache-2.0",
+      "name": "Apache License 2.0",
+      "source": "resources/requests/upstream/LICENSE",
+      "obligations": ["保留版权与许可声明", "保留许可证文本", "标明修改"],
+      "status": "随快照核验"
+    },
+    "snapshotNote": "索引由 Requests 官方仓库固定提交 611c6162 构建。提交包只开放必要的源文件、维护文档摘录和许可证文本，不包含依赖安装包或个人数据。"
+  },
+  "documents": [
+    {"id":"readme-install","type":"README","title":"官方 README：安装与基础用法","source":"https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md","evidencePath":"resources/requests/upstream/README.md","content":"Requests 是 Python HTTP 库。官方 README 说明可通过 pip 安装，并展示 requests.get、响应状态和文本读取等基础用法；还列出 Python 3.10+、Keep-Alive 与 Connection Pooling、Sessions with Cookie Persistence、Connection Timeouts、Streaming Downloads。","tags":["安装","pip","get","请求","README","Python 3.10","timeout","连接","Cookie","Session","下载"]},
+    {"id":"api-code","type":"CODE","title":"src/requests/api.py：API 实现","source":"https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py","evidencePath":"resources/requests/upstream/src_requests_api.py","content":"Requests 的 API 模块实现 request、get、options、head、post、put、patch 和 delete 等便捷方法。OpenBridge 使用该固定版本源码作为代码理解和来源定位的演示对象。","tags":["源码","API","get","post","request","代码"]},
+    {"id":"contributing","type":"CONTRIBUTING","title":"官方贡献指南","source":"https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md","evidencePath":"resources/requests/upstream/.github_CONTRIBUTING.md","content":"贡献前应阅读项目贡献指南，创建隔离分支，补充或更新测试，并在提交前运行项目规定的检查。Issue 和 Pull Request 应提供清晰的上下文，包括 reproduce、environment、expected 和 actually happens；提交前还要检查 duplicate。","tags":["贡献","分支","测试","pull request","维护","reproduce","environment","expected","actually"]},
+    {"id":"security","type":"SECURITY","title":"官方安全政策","source":"https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md","evidencePath":"resources/requests/upstream/.github_SECURITY.md","content":"疑似安全问题不应在公开 Issue 中披露敏感细节，应按项目安全政策使用指定渠道报告。演示数据不得包含密钥、个人信息或生产日志。安全报告使用 Draft Security Advisory，并包含发现代码和 shortest reproduction code。","tags":["安全","漏洞","隐私","密钥","报告","disclose","Security Advisory"]},
+    {"id":"license","type":"LICENSE","title":"官方 LICENSE","source":"https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/LICENSE","evidencePath":"resources/requests/upstream/LICENSE","content":"Requests 使用 Apache License 2.0。允许使用、修改和再分发，但需要保留版权和许可证声明，并遵守许可证中的相关条件。该文件随提交包保留。","tags":["license","apache","再分发","版权","修改"]},
+    {"id":"dev-contributing","type":"DOC","title":"开发者贡献文档","source":"https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst","evidencePath":"resources/requests/upstream/docs_dev_contributing.rst","content":"开发者文档记录 Requests 的开发和贡献流程：先运行测试，再提交 Pull Request 到 main 分支，并按 pre-commit 规则检查。OpenBridge 将其作为检索证据，并把版本和文件路径展示给用户。","tags":["开发","文档","贡献","测试","main","pull request","pre-commit"]},
+    {"id":"tests","type":"TEST","title":"官方测试文件","source":"https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/tests/test_requests.py","evidencePath":"resources/requests/upstream/tests_test_requests.py","content":"官方测试文件包含 Requests 行为测试，包括 TestTimeout。文件位于 tests/test_requests.py。OpenBridge 不修改上游测试，只用固定版本文件说明如何从源码和测试中定位贡献入口。","tags":["测试","源码","贡献","验证","TestTimeout","test_requests.py"]}
+  ],
+  "resources": [
+    {"name":"Requests 官方仓库快照","type":"开源软件与源码","version":"commit 611c6162","source":"https://github.com/psf/requests/tree/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60","license":"Apache-2.0","use":"固定版本源码、README、贡献指南、安全政策、测试文件和许可证作为 RAG 检索证据","obligations":"保留 LICENSE 和版权信息；不得把 OpenBridge 自有代码标为 Requests；修改或摘录需说明来源","teamWork":"版本锁定、文件索引、证据片段、引用链和协作工作流","status":"已核验（2026-10-26 读取随快照保留的 LICENSE：Apache License 2.0）","openMode":"随提交包提供必要快照和来源链接"},
+    {"name":"Qwen3-VL-2B-Instruct","type":"开源多模态模型","version":"本地权重目录中的模型卡版本","source":"https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct","license":"Apache-2.0（本地模型卡 YAML 声明 license: apache-2.0）","use":"本地模型服务对检索到的 Requests 证据进行中文回答生成","obligations":"保留模型和来源说明；遵守模型许可、使用政策和权重再分发限制；提交时不打包模型权重","teamWork":"模型适配接口、证据约束提示词、输出引用、评测和风险护栏","status":"已核验（2026-10-26 读取本地模型卡声明）；启动状态以 /api/status 为准","openMode":"提交适配代码和配置，不公开模型权重"},
+    {"name":"OpenBridge 自有代码","type":"软件、工作流和评测脚本","version":"0.4.0","source":"本提交包","license":"MIT","use":"本地网页工作台、RAG 检索、模型适配、护栏、评测、A/B 盲评与无需 GPU 的离线演示","obligations":"保留本项目 LICENSE","teamWork":"全部前端、Node 服务、索引字段、提示词、逐句核验、护栏、验证、盲评工具、离线演示和文档","status":"已核验","openMode":"随公开仓库与提交包开放源码、测试、盲评工具与离线演示"},
+    {"name":"模型运行依赖","type":"推理运行环境","version":"Python 3.11；transformers 5.1.0；accelerate 1.15.0；safetensors 0.8.0；sentencepiece 0.2.2；torch 2.11.0+cu128","source":"https://pypi.org/","license":"Apache-2.0（transformers / accelerate / safetensors / sentencepiece）；BSD-3-Clause（PyTorch）","use":"由使用者本地安装，运行 model/serve.py 提供推理服务","obligations":"逐项保留适用声明；确认版本与再分发范围；不打包推理环境和模型权重","teamWork":"环境适配与模型服务封装（model/serve.py、requirements.txt）","status":"已核验（2026-10-26 逐项读取本地已安装包的 METADATA 许可字段）","openMode":"提供 requirements.txt 与安装说明，不打包依赖"},
+    {"name":"Node.js 与现代浏览器","type":"运行环境","version":"Node.js 18+","source":"用户本地环境","license":"按各自发布许可和服务条款","use":"运行本地服务和网页界面","obligations":"由用户自行安装并遵守对应条款","teamWork":"无","status":"不适用（非本项目分发内容，由使用者按其安装来源遵守）","openMode":"提供安装和运行说明"},
+    {"name":"评测用例与验证记录","type":"自有材料","version":"32 条开发检索、8 条护栏、12 条模型对照、55 条留出问题与 20 条独立验证问题","source":"本提交包 data/、benchmark/ 与 results/","license":"OpenBridge 自有材料按 MIT 提供","use":"用于离线评测、人工复核和 A/B 盲评","obligations":"结果仅适用于所列问题集和固定快照；模型结果需人工复核","teamWork":"用例、关键词、复核记录、A/B 盲评记录与评测流程","status":"已核验（自有材料，2026-10-26 随包记录）","openMode":"随公开仓库开放问题、脚本、结果与复核记录"}
+  ]
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "B01",
+    "query": "Requests 的 get 方法在哪里实现？",
+    "verdict": "需修正",
+    "note": "存在可定位的笔误：正文一处把 api.py 写成 api.p，照抄路径会失效。其余内容（get 定义、经 request() 调用、参数说明）与 api.py 一致。判为需修正：改正该字符串后方可直接采用。"
+  },
+  {
+    "id": "B02",
+    "query": "贡献代码前要做哪些准备？",
+    "verdict": "可用",
+    "note": "v0.4 核验 2/6 有据、4 改写、0 无据。按贡献指南给出 fork 仓库、先运行测试、编写会先失败的复现/新功能测试、改完再运行全量测试、向主分支发 PR 的完整顺序，无编造步骤。"
+  },
+  {
+    "id": "B03",
+    "query": "Requests 用什么许可证，再分发要注意什么？",
+    "verdict": "可用",
+    "note": "v0.4 核验 0 无据。结论为 Apache License 2.0，并按 LICENSE 第4节原文编号完整列出 (a) 提供许可副本、(b) 修改文件显著标注、(c) 保留版权/专利/商标/署名、(d) 随 NOTICE 携带署名，以及可附加自有版权与条款。v0.4 用“标题+第4节”双锚点窗口解决了长 LICENSE 在 8GB 显存上的 OOM。"
+  },
+  {
+    "id": "B04",
+    "query": "我想报告一个安全漏洞，应该怎么做？",
+    "verdict": "需修正",
+    "note": "URL 与时限表述有误：正文写作 https:/github.com/psf/request/security/advisories/new（缺一个斜杠，且 requests 少写 s），时限写作“两个工作日”，而 SECURITY.md 原文是 within two days at the outside。渠道与必填项本身正确，改正这两处后才可直接采用。"
+  },
+  {
+    "id": "B05",
+    "query": "怎么安装并发起一个 GET 请求？",
+    "verdict": "需修正",
+    "note": "示例 URL 漏写冒号（https//httpbin.org/get），照抄无法运行；pip 安装、requests.get、params 与 Response 说明均与 README/api.py 一致。判为需修正。"
+  },
+  {
+    "id": "B06",
+    "query": "Requests 的测试文件在哪里？",
+    "verdict": "可用",
+    "note": "v0.4 核验 0 无据。明确给出 tests/ 目录与 tests/test_requests.py，并补充贡献前需编写/运行测试；旧版整段复读已消失。来源栏给出 PSF 仓库 blob 链接（长 URL 中 commit 段被截断，完整路径以来源栏为准）。"
+  },
+  {
+    "id": "B07",
+    "query": "Requests 支持哪些 Python 版本？",
+    "verdict": "可用",
+    "note": "v0.4 核验 1/1 有据、0 无据。答案为 Requests officially supports Python 3.10+，与 README L38 一致。2B 模型在该题上会回退到训练记忆（3.11/3.12 或 2.7）甚至输出上标，单靠提示词不稳定；v0.4 增加“证据版本声明提取 + 证据版本校正”（enforceVersionFacts），并高亮声明原句，最终稳定输出证据版本，属证据事实校正而非模板答案。"
+  },
+  {
+    "id": "B08",
+    "query": "如何设置 timeout 并复用连接？",
+    "verdict": "需修正",
+    "note": "示例域名写作 http.bin.org（应为 httpbin.org），照抄会失败；timeout 元组与会话复用说明正确；另有一处模型补出的超时数值被断言值校验标红（真阳性）。判为需修正。"
+  },
+  {
+    "id": "B09",
+    "query": "Issue 中应该包含哪些复现信息？",
+    "verdict": "基本可用",
+    "note": "v0.4 核验 2/9 有据、1 无据。已覆盖完整 traceback、最小可复现代码、环境（Python 版本）、预期 vs 实际、Requests 版本、复现条件等贡献指南要素，方向正确。唯一被标红的是“包管理器（pip/conda）、依赖库列表”这一扩展细节，公开 Issue 模板未逐字要求，属合理但越界的补充；核验器把多为同义改写的要点计为改写而非有据。"
+  },
+  {
+    "id": "B10",
+    "query": "提交代码前为什么要先写测试？",
+    "verdict": "基本可用",
+    "note": "v0.4 核验 0/6 有据、1 无据。答案准确描述了“先写能复现问题且会失败的测试→修改→重跑全量测试”的 TDD 流程，且指出其目的在于防止回归；但“为什么”属于基于流程的合理推断（保障代码质量、提高健壮性），贡献指南只逐字规定了“先写测试/重跑测试”这一动作，没有逐字给出目的句，故逐句核验无据，未发现事实错误。"
+  },
+  {
+    "id": "B11",
+    "query": "Apache-2.0 允许修改后再分发吗？",
+    "verdict": "可用",
+    "note": "v0.4 核验 0 无据。明确结论为允许修改后再分发，并按第4节列出 (a)-(d) 条件，补充可附加自有版权/条款与专利授权终止规则（对应第3节）。旧版那句在 Apache-2.0 中并不存在的编造引号 “The above license applies...” 已消失。"
+  },
+  {
+    "id": "B12",
+    "query": "安全漏洞报告需要放哪些复现内容？",
+    "verdict": "可用",
+    "note": "v0.4 核验 0 无据。只列 SECURITY.md 明确要求的四项：发现代码、最短复现代码、问题与影响描述、保密要求，并指明通过 Draft Security Advisory 提交。v0.4 对公开 Issue 模板（CONTRIBUTING）在 security 意图下检索降权，旧版混入的 curl/wget、截图、服务中断等臆造内容已全部消失。"
+  }
+]

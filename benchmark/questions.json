@@ -1,0 +1,14 @@
+[
+  {"id":"B01","query":"Requests 的 get 方法在哪里实现？","source":"api-code","expected":["requests.get","def get"],"review":""},
+  {"id":"B02","query":"贡献代码前要做哪些准备？","source":"contributing","expected":["重复","测试","pre-commit","main 分支"],"review":"核对是否包含避免重复 PR、提交前后测试、commit message 说明 why、pre-commit/代码风格和向 main 分支提交。"},
+  {"id":"B03","query":"Requests 用什么许可证，再分发要注意什么？","source":"license","expected":["Apache","license"],"review":""},
+  {"id":"B04","query":"我想报告一个安全漏洞，应该怎么做？","source":"security","expected":["Draft Security Advisory","advisories/new","最短复现代码"],"review":"确认明确给出 SECURITY.md 的 GitHub Draft Security Advisory 入口与最短复现代码；不要附加证据外的隐私告诫。"},
+  {"id":"B05","query":"怎么安装并发起一个 GET 请求？","source":"readme-install","expected":["pip","get"],"review":""},
+  {"id":"B06","query":"Requests 的测试文件在哪里？","source":"tests","expected":["test_requests.py","测试"],"review":""},
+  {"id":"B07","query":"Requests 支持哪些 Python 版本？","source":"readme-install","expected":["Python 3.10","pip"],"review":"核对版本结论和 README 引用。"},
+  {"id":"B08","query":"如何设置 timeout 并复用连接？","source":"readme-install","expected":["timeout","Session"],"review":"核对 timeout 和 Session 是否均来自引用证据。"},
+  {"id":"B09","query":"Issue 中应该包含哪些复现信息？","source":"contributing","expected":["reproduce","expected"],"review":"核对版本、环境、最小复现、实际和预期结果是否明确。"},
+  {"id":"B10","query":"提交代码前为什么要先写测试？","source":"dev-contributing","expected":["tests","Pull Request"],"review":"核对测试先行、全量测试和 PR 流程。"},
+  {"id":"B11","query":"Apache-2.0 允许修改后再分发吗？","source":"license","expected":["Apache","distribution"],"review":"只依据 LICENSE 核对修改、分发和保留声明义务。"},
+  {"id":"B12","query":"安全漏洞报告需要放哪些复现内容？","source":"security","expected":["Security Advisory","shortest"],"review":"核对私密入口、发现代码和最短复现代码，不把安全问题写入公开 Issue。"}
+]

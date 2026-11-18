@@ -1,0 +1,156 @@
+{
+  "reviewerId": "student04",
+  "familiarity": 2,
+  "startedAt": "2026-11-17T12:49:42.717Z",
+  "finishedAt": "2026-11-17T12:51:22.394Z",
+  "aborted": false,
+  "sourceResults": "2026-10-25T13:48:18.790Z",
+  "questionCount": 12,
+  "answeredCount": 12,
+  "answers": [
+    {
+      "id": "B01",
+      "layout": {
+        "A": "baseline",
+        "B": "rag"
+      },
+      "skipped": false,
+      "preference": "rag",
+      "scoreRag": 5,
+      "scoreBaseline": 4,
+      "reason": ""
+    },
+    {
+      "id": "B02",
+      "layout": {
+        "A": "rag",
+        "B": "baseline"
+      },
+      "skipped": false,
+      "preference": "baseline",
+      "scoreRag": 4,
+      "scoreBaseline": 5,
+      "reason": ""
+    },
+    {
+      "id": "B03",
+      "layout": {
+        "A": "rag",
+        "B": "baseline"
+      },
+      "skipped": false,
+      "preference": "rag",
+      "scoreRag": 5,
+      "scoreBaseline": 4,
+      "reason": ""
+    },
+    {
+      "id": "B04",
+      "layout": {
+        "A": "baseline",
+        "B": "rag"
+      },
+      "skipped": false,
+      "preference": "rag",
+      "scoreRag": 5,
+      "scoreBaseline": 4,
+      "reason": ""
+    },
+    {
+      "id": "B05",
+      "layout": {
+        "A": "baseline",
+        "B": "rag"
+      },
+      "skipped": false,
+      "preference": "baseline",
+      "scoreRag": 4,
+      "scoreBaseline": 5,
+      "reason": ""
+    },
+    {
+      "id": "B06",
+      "layout": {
+        "A": "rag",
+        "B": "baseline"
+      },
+      "skipped": false,
+      "preference": "rag",
+      "scoreRag": 4,
+      "scoreBaseline": 3,
+      "reason": ""
+    },
+    {
+      "id": "B07",
+      "layout": {
+        "A": "rag",
+        "B": "baseline"
+      },
+      "skipped": false,
+      "preference": "rag",
+      "scoreRag": 5,
+      "scoreBaseline": 3,
+      "reason": ""
+    },
+    {
+      "id": "B08",
+      "layout": {
+        "A": "rag",
+        "B": "baseline"
+      },
+      "skipped": false,
+      "preference": "baseline",
+      "scoreRag": 4,
+      "scoreBaseline": 5,
+      "reason": ""
+    },
+    {
+      "id": "B09",
+      "layout": {
+        "A": "baseline",
+        "B": "rag"
+      },
+      "skipped": false,
+      "preference": "rag",
+      "scoreRag": 4,
+      "scoreBaseline": 4,
+      "reason": ""
+    },
+    {
+      "id": "B10",
+      "layout": {
+        "A": "baseline",
+        "B": "rag"
+      },
+      "skipped": false,
+      "preference": "rag",
+      "scoreRag": 3,
+      "scoreBaseline": 5,
+      "reason": ""
+    },
+    {
+      "id": "B11",
+      "layout": {
+        "A": "rag",
+        "B": "baseline"
+      },
+      "skipped": false,
+      "preference": "rag",
+      "scoreRag": 4,
+      "scoreBaseline": 3,
+      "reason": ""
+    },
+    {
+      "id": "B12",
+      "layout": {
+        "A": "rag",
+        "B": "baseline"
+      },
+      "skipped": false,
+      "preference": "baseline",
+      "scoreRag": 4,
+      "scoreBaseline": 5,
+      "reason": ""
+    }
+  ]
+}

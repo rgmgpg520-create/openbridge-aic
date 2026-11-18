@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "0.4",
+  "project": {
+    "name": "DemoLib",
+    "displayName": "Demo Library",
+    "url": "https://example.com/demo",
+    "snapshotCommit": "demo-1",
+    "license": {
+      "spdx": "Apache-2.0"
+    },
+    "snapshotNote": "Demo Library 示例项目资料"
+  },
+  "documents": [
+    {
+      "id": "readme",
+      "type": "README",
+      "title": "安装说明",
+      "source": "https://example.com/demo/readme",
+      "content": "使用 pip install demolib 安装 Demo Library。",
+      "tags": ["安装", "pip"]
+    }
+  ],
+  "resources": []
+}

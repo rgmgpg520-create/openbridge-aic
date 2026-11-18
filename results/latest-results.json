@@ -1,0 +1,991 @@
+{
+  "generatedAt": "2026-10-25T13:48:18.790Z",
+  "model": "Qwen3-VL-2B-Instruct",
+  "mode": "Requests fixed snapshot RAG vs baseline",
+  "configuration": {
+    "questionCount": 12,
+    "maxTokens": 520,
+    "temperature": 0.1
+  },
+  "results": [
+    {
+      "id": "B01",
+      "query": "Requests 的 get 方法在哪里实现？",
+      "expectedSource": "api-code",
+      "baseline": {
+        "answer": "Requests 的 `get` 方法是 Python 标准库中 requests 模块的一部分，它在 `requests` 库的源码中实现。具体来说，该方法位于 `requests.sessions.Session` 类和 `requests.utils` 模块中，其核心逻辑由 `http.client.HTTPConnection` 和 `urllib.parse.urljoin` 等组件支持。\n\n不过，具体的代码实现细节通常不在公开文档或标准 API 中直接展示，而是通过模块内部函数和类来完成请求处理。例如，在 `requests.py` 文件中的 `get()` 函数会调用底层的网络协议（如 HTTP）进行数据传输，并根据 URL、headers、参数等构造请求。这个过程涉及多个子模块，包括但不限于：\n\n- `urlparse`：用于解析URL；\n- `urllib.request` 或 `urllib2`：用于发起HTTP请求；\n- `ssl`：用于安全连接管理；\n- `socket`：用于建立TCP连接；\n- `threading`：可能用于并发处理；\n\n这些组件共同协作以实现对服务器的 GET 请求操作。由于 `requests` 是一个第三方库，其完整实现依赖于 Python 的标准库以及相关的扩展功能。因此，要获取完整的实现细节，建议查阅官方文档或查看项目源码。",
+        "keywordHits": 0,
+        "keywordTotal": 2,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 15552
+      },
+      "rag": {
+        "answer": "Requests 的 `get` 方法在 `src/requests/api.py` 文件中定义，位于 `api.py` 模块内。该方法通过 `request()` 函数调用，接受 `url` 和 `params` 参数，并返回 `Response` 对象。其核心实现位于 `get` 函数中，用于发送 GET 请求。此外，`get` 方法也支持传递额外参数，包括超时设置、允许重定向等选项。  \n\n根据证据内容，`get` 方法的具体实现位置为 `src/requests/api.p`，其功能基于 `request` 函数的调用，而 `request` 函数本身在 `src/requests/__init__.py` 中被注册。因此，`get` 方法的实现依赖于 `api.py` 文件中的 `request` 函数定义。  \n\n证据中未说明。",
+        "keywordHits": 0,
+        "keywordTotal": 2,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 18870,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "api-code",
+            "title": "src/requests/api.py：API 实现",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py",
+            "evidence": "    :param timeout: (optional) How many seconds to wait for the server to send data\n        before giving up, as a float, or a :ref:`(connect timeout, read\n        timeout) <timeouts>` tuple.\n    :type timeout: float or tuple\n    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.\n    :type allow_redirects: bool\n    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.\n    :param verify: (optional) Either a boolean, in which case it controls whether we verify\n            the server's TLS certificate, or a string, in which case it must be a path\n            to a CA bundle to use. Defaults to ``True``.\n    :param stream: (optional) if ``False``, the response content will be immediately downloaded.\n    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, ('cert', 'key') pair.\n    :return: :class:`Response <Response>` object\n    :rtype: requests.Response\n\n    Usage::\n\n      >>> import requests\n      >>> req = requests.request('GET', 'https://httpbin.org/get')\n    :rtype: requests.Response\n\n    Usage::\n\n      >>> import requests\n      >>> req = requests.request('GET', 'https://httpbin.org/get')\n      >>> req\n      <Response [200]>\n    \"\"\"\n\n    # By using the 'with' statement we are sure the session is closed, thus we\n    # avoid leaving sockets open which can trigger a ResourceWarning in some\n    # cases, and look like a memory leak in others.\n    with sessions.Session() as session:\n        return session.request(method=method, url=url, **kwargs)\n\n\ndef get(\n    url: _t.UriType, params: _t.ParamsType = None, **kwargs: Unpack[_t.GetKwargs]\n) -> Response:\n    r\"\"\"Sends a GET request.\n\n    :param url: URL for the new :class:`Request` object.\n   ",
+            "localPath": "resources/requests/upstream/src_requests_api.py",
+            "lineStart": 44,
+            "lineEnd": 120,
+            "score": 8.37
+          },
+          {
+            "id": "readme-install",
+            "title": "官方 README：安装与基础用法",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md",
+            "evidence": "# Requests\n\n[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)\n[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)\n[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)\n[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)\n[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n```python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>> r.json()\n{'authenticated': True, ...}\n```\n\nRequests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data — but nowadays, just use the `json` method!\n\nRequests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.\n\n## Installing Requests and Supported Versions\n\nRequests is available on PyPI:\n\n```console\n$ python -m pip install requests\n```\n\nRequests officially supports Python 3.10+.\n\n## Supported Features & Best–Practices\n\nRequests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.\n\n- Keep-Alive & Connecti",
+            "localPath": "resources/requests/upstream/README.md",
+            "lineStart": 1,
+            "lineEnd": 77,
+            "score": 7.31
+          },
+          {
+            "id": "dev-contributing",
+            "title": "开发者贡献文档",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst",
+            "evidence": "   document: :ref:`bug-reports`.\n3. Write tests that demonstrate your bug or feature. Ensure that they fail.\n4. Make your change.\n5. Run the entire test suite again, confirming that all tests pass *including\n   the ones you just added*.\n6. Send a GitHub Pull Request to the main repository's ``main`` branch.\n   GitHub Pull Requests are the expected method of code collaboration on this\n   project.\n\nThe following sub-sections go into more detail on some of the points above.\n\nCode Review\n~~~~~~~~~~~\n\nContributions will not be merged until they've been code reviewed. You should\nimplement any code review feedback unless you strongly object to it. In the\nevent that you object to the code review feedback, you should make your case\nclearly and calmly. If, after doing so, the feedback is judged to still apply,\nyou must either apply the feedback or withdraw your contribution.\n\nCode Style\n~~~~~~~~~~\n\nRequests uses a collection of tools to ensure the code base has a consistent\nstyle as it grows. We have these orchestrated using a tool called\n`pre-commit`_. This can be installed locally and run over your changes prior\nstyle as it grows. We have these orchestrated using a tool called\n`pre-commit`_. This can be installed locally and run over your changes prior\nto opening a PR, and will also be run as part of the CI approval process\nbefore a change is merged.\n\nYou can find the full list of formatting requirements specified in the\n`.pre-commit-config.yaml`_ at the top level directory of Requests.\n\n.. _pre-commit: https://pre-commit.com/\n.. _.pre-commit-config.yaml: https://github.com/psf/requests/blob/main/.pre-commit-config.yaml\n\nNew Contributors\n~~~~~~~~~~~~~~~~\n\nIf you are new or relatively new to Open Source, welcome! Requests aims to\nbe a gentle introduction to the world of Open Sou",
+            "localPath": "resources/requests/upstream/docs_dev_contributing.rst",
+            "lineStart": 74,
+            "lineEnd": 166,
+            "score": 4.32
+          }
+        ],
+        "verification": {
+          "factualClaims": 6,
+          "groundedClaims": 6,
+          "paraphrasedClaims": 0,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 6,
+          "formatFlaggedClaims": 1,
+          "formatFlagged": [
+            "根据证据内容，`get` 方法的具体实现位置为 `src/requests/api.p`，其功能基于 `request` 函数的调用，而 `request` 函数本身在 `src/requests/__init__.py` 中被注册。［src/requests/api.p、src/requests/__init__.py、api.p、__init__.py］"
+          ],
+          "copySafeClaims": 5,
+          "copySafeRate": 83,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 100,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": ""
+    },
+    {
+      "id": "B02",
+      "query": "贡献代码前要做哪些准备？",
+      "expectedSource": "contributing",
+      "baseline": {
+        "answer": "在贡献代码之前，通常需要完成以下准备工作：\n\n1. **了解项目和库的背景**：阅读项目的文档、README 文件以及相关的说明，理解其功能、目标和技术栈。\n\n2. **熟悉开发环境**：确保你已经安装了必要的依赖项，并且能够运行项目所需的工具（如 Python 环境）。\n\n3. **查看现有代码和提交历史**：通过 Git 或其他版本控制系统检查当前代码的状态，包括最近的更改记录，以了解项目的发展方向。\n\n4. **学习相关编程语言和框架**：如果你是为某个特定的技术栈或语言（例如 Python）做出贡献，应掌握该语言的基础知识及常用库。\n\n5. **遵循编码规范**：大多数开源项目都有自己的编码标准和风格指南，遵守这些规则有助于提高代码质量并减少潜在冲突。\n\n6. **参与社区讨论**：关注该项目的 GitHub 页面或其他平台上的讨论区，了解团队成员的想法和需求，这可以帮助你更好地定位你的贡献点。\n\n7. **确认权限与流程**：有些项目可能有明确的贡献者协议或审查流程，你需要了解如何申请加入或者提交变更请求。\n\n8. **测试用例和集成验证**：如果涉及新功能或修改，准备好相应的单元测试和集成测试来验证改动的有效性。\n\n9. **获取反馈**：在提交任何代码之前，最好先向维护者询问是否可以进行此类贡献，避免不必要的误解或拒绝。\n\n以上步骤能帮助你在正式开始贡献之前做好充分准备。",
+        "keywordHits": 1,
+        "keywordTotal": 4,
+        "keywordCoverage": 0.25,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 16493
+      },
+      "rag": {
+        "answer": "贡献代码前需做以下准备：\n1. Fork 仓库至个人GitHub账户；\n2. 运行本地测试确保通过；\n3. 编写演示已知问题或新功能的测试用例，并保证测试失败；\n4. 提交更改后重新运行全部测试，验证新增内容无误；\n5. 发送Pull Request到主分支。\n\n[证据中未说明]",
+        "keywordHits": 1,
+        "keywordTotal": 4,
+        "keywordCoverage": 0.25,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 9681,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "dev-contributing",
+            "title": "开发者贡献文档",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst",
+            "evidence": "contributors.\n\nCode of Conduct\n---------------\n\nThe Python community is made up of members from around the globe with a diverse\nset of skills, personalities, and experiences. It is through these differences\nthat our community experiences great successes and continued growth. When you're\nworking with members of the community, follow the\n`Python Software Foundation Code of Conduct`_ to help steer your interactions\nand keep Python a positive, successful, and growing community.\n\n.. _Python Software Foundation Code of Conduct: https://policies.python.org/python.org/code-of-conduct/\n\n.. _early-feedback:\n\nGet Early Feedback\n------------------\n\nIf you are contributing, do not feel the need to sit on your contribution until\nit is perfectly polished and complete. It helps everyone involved for you to\nseek feedback as early as you possibly can. Submitting an early, unfinished\nversion of your contribution for feedback in no way prejudices your chances of\ngetting that contribution accepted, and can save you from putting a lot of work\ninto a contribution that is not suitable for the project.\n\nContribution Suitability\ngetting that contribution accepted, and can save you from putting a lot of work\ninto a contribution that is not suitable for the project.\n\nContribution Suitability\n------------------------\n\nOur project maintainers have the last word on whether or not a contribution is\nsuitable for Requests. All contributions will be considered carefully, but from\ntime to time, contributions will be rejected because they do not suit the\ncurrent goals or needs of the project.\n\nIf your contribution is rejected, don't despair! As long as you followed these\nguidelines, you will have a much better chance of getting your next\ncontribution accepted.\n\n\nCode Contributions\n------------------\n\nSteps",
+            "localPath": "resources/requests/upstream/docs_dev_contributing.rst",
+            "lineStart": 23,
+            "lineEnd": 99,
+            "score": 14.41
+          },
+          {
+            "id": "contributing",
+            "title": "官方贡献指南",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md",
+            "evidence": "# Contribution Guidelines\n\nBefore opening any issues or proposing any pull requests, please read\nour [Contributor's Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)\nas well as our [AI Policy](/.github/AI_POLICY.md).\n\nTo get the greatest chance of helpful responses, please also observe the\nfollowing additional notes.\n\n## Questions\n\nThe GitHub issue tracker is for *bug reports* and *feature requests*. Please do\nnot use it to ask questions about how to use Requests. These questions should\ninstead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure\nthat your question is tagged with the `python-requests` tag when asking it on\nStack Overflow, to ensure that it is answered promptly and accurately.\n\n## Good Bug Reports\n\nPlease be aware of the following things when filing bug reports:\n\n1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature\n   to check whether your bug report or feature request has been mentioned in\n   the past. Duplicate bug reports and feature requests are a huge maintenance\n   burden on the limited resources of the project. If it is clear from your\n   the past. Duplicate bug reports and feature requests are a huge maintenance\n   burden on the limited resources of the project. If it is clear from your\n   report that you would have struggled to find the original, that's ok, but\n   if searching for a selection of words in your issue title would have found\n   the duplicate then the issue will likely be closed extremely abruptly.\n2. When filing bug reports about exceptions or tracebacks, please include the\n   *complete* traceback. Partial tracebacks, or just the exception text, are\n   not helpful. Issues that do not contain complete tracebacks may be closed\n   without warning.\n3. Make sure you provide a",
+            "localPath": "resources/requests/upstream/.github_CONTRIBUTING.md",
+            "lineStart": 1,
+            "lineEnd": 67,
+            "score": 6.77
+          },
+          {
+            "id": "security",
+            "title": "官方安全政策",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md",
+            "evidence": "# Vulnerability Disclosure\n\nIf you think you have found a potential security vulnerability in\nrequests, please open a [draft Security Advisory](https://github.com/psf/requests/security/advisories/new)\nvia GitHub. We will coordinate verification and next steps through\nthat secure medium.\n\nIf English is not your first language, please try to describe the\nproblem and its impact to the best of your ability. For greater detail,\nplease use your native language and we will try our best to translate it\nusing online services.\n\nPlease also include the code you used to find the problem and the\nshortest amount of code necessary to reproduce it.\n\nPlease do not disclose this to anyone else. We will retrieve a CVE\nidentifier if necessary and give you full credit under whatever name or\nalias you provide. We will only request an identifier when we have a fix\nand can publish it in a release.\n\nWe will respect your privacy and will only publicize your involvement if\nyou grant us permission.\n\n## Process\n\nThis following information discusses the process the requests project\nfollows in response to vulnerability disclosures. If you are disclosing\nyou grant us permission.\n\n## Process\n\nThis following information discusses the process the requests project\nfollows in response to vulnerability disclosures. If you are disclosing\na vulnerability, this section of the documentation lets you know how we\nwill respond to your disclosure.\n\n### Timeline\n\nWhen you report an issue, one of the project members will respond to you\nwithin two days *at the outside*. In most cases responses will be\nfaster, usually within 12 hours. This initial response will at the very\nleast confirm receipt of the report.\n\nIf we were able to rapidly reproduce the issue, the initial response\nwill also contain confirmation of the iss",
+            "localPath": "resources/requests/upstream/.github_SECURITY.md",
+            "lineStart": 1,
+            "lineEnd": 67,
+            "score": 1.28
+          }
+        ],
+        "verification": {
+          "factualClaims": 6,
+          "groundedClaims": 2,
+          "paraphrasedClaims": 4,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 6,
+          "formatFlaggedClaims": 0,
+          "formatFlagged": [],
+          "copySafeClaims": 2,
+          "copySafeRate": 33,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 33,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": "核对是否包含避免重复 PR、提交前后测试、commit message 说明 why、pre-commit/代码风格和向 main 分支提交。"
+    },
+    {
+      "id": "B03",
+      "query": "Requests 用什么许可证，再分发要注意什么？",
+      "expectedSource": "license",
+      "baseline": {
+        "answer": "Requests 使用的是 MIT 许可证。在再分发时，需要遵守该许可证的条款，通常意味着你可以自由地使用、修改和重新分发代码，但必须保留原始的版权声明和许可声明，并且不得将源码用于商业用途而未获得授权。具体细节应参考官方文档或许可证文件以确保合规性。",
+        "keywordHits": 0,
+        "keywordTotal": 2,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 4057
+      },
+      "rag": {
+        "answer": "Requests 使用 Apache License 2.0 协议，原文见 LICENSE 文件。  \n再分发时须遵守以下条件：  \n(a) 必须将本许可协议副本发送给所有接收者；  \n(b) 若修改了源码，则应显著注明修改内容；  \n(c) 在源形式衍生作品中保留原始作品的所有版权、专利、商标及署名通知，除非这些通知不适用于衍生作品的部分；  \n(d) 如源码中包含名为 \"NOTICE\" 的文本文件，则衍生作品也必须包含该文件中所含的署名信息，且至少在一个位置内呈现，包括但不限于通过发布文件、文档或生成的显示中；  \n(e) 用户可以添加自己的版权声明，并可为修改后的代码设定不同的使用、复制或分发许可条款。  \n\n证据中未说明。",
+        "keywordHits": 2,
+        "keywordTotal": 2,
+        "keywordCoverage": 1,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 18319,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "license",
+            "title": "官方 LICENSE",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/LICENSE",
+            "evidence": "\n                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n……（中间定义条款略，以下为与“再分发/分发”相关的条款）……\n\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity ",
+            "localPath": "resources/requests/upstream/LICENSE",
+            "lineStart": 1,
+            "lineEnd": 126,
+            "score": 18.63
+          },
+          {
+            "id": "api-code",
+            "title": "src/requests/api.py：API 实现",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py",
+            "evidence": "\"\"\"\nrequests.api\n~~~~~~~~~~~~\n\nThis module implements the Requests API.\n\n:copyright: (c) 2012 by Kenneth Reitz.\n:license: Apache2, see LICENSE for more details.\n\"\"\"\n\nfrom __future__ import annotations\n\nfrom typing import TYPE_CHECKING\n\nfrom . import sessions\nfrom .models import Response\n\nif TYPE_CHECKING:\n    from typing_extensions import Unpack\n\n    from . import _types as _t\n\n\ndef request(\n    method: str, url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]\n) -> Response:\n    \"\"\"Constructs and sends a :class:`Request <Request>`.\n\n    :param method: method for the new :class:`Request` object: ``GET``, ``OPTIONS``, ``HEAD``, ``POST``, ``PUT``, ``PATCH``, or ``DELETE``.\n    :param url: URL for the new :class:`Request` object.\n    :param params: (optional) Dictionary, list of tuples or bytes to send\n        in the query string for the :class:`Request`.\n    :param data: (optional) Dictionary, list of tuples, bytes, or file-like\n        object to send in the body of the :class:`Request`.\n    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.\n        object to send in the body of the :class:`Request`.\n    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.\n    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.\n    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.\n    :param files: (optional) Dictionary of ``'name': file-like-objects`` (or ``{'name': file-tuple}``) for multipart encoding upload.\n        ``file-tuple`` can be a 2-tuple ``('filename', fileobj)``, 3-tuple ``('filename', fileobj, 'content_type')``\n        or a 4-tuple ``('filename', fileobj, 'content_type', custom_headers)``, where ``'con",
+            "localPath": "resources/requests/upstream/src_requests_api.py",
+            "lineStart": 1,
+            "lineEnd": 62,
+            "score": 6.54
+          },
+          {
+            "id": "readme-install",
+            "title": "官方 README：安装与基础用法",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md",
+            "evidence": "# Requests\n\n[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)\n[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)\n[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)\n[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)\n[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n```python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>> r.json()\n{'authenticated': True, ...}\n```\n\nRequests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data — but nowadays, just use the `json` method!\n\nRequests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.\n\n## Installing Requests and Supported Versions\n\nRequests is available on PyPI:\n\n```console\n$ python -m pip install requests\n```\n\nRequests officially supports Python 3.10+.\n\n## Supported Features & Best–Practices\n\nRequests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.\n\n- Keep-Alive & Connecti",
+            "localPath": "resources/requests/upstream/README.md",
+            "lineStart": 1,
+            "lineEnd": 77,
+            "score": 4.71
+          }
+        ],
+        "verification": {
+          "factualClaims": 6,
+          "groundedClaims": 2,
+          "paraphrasedClaims": 4,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 6,
+          "formatFlaggedClaims": 0,
+          "formatFlagged": [],
+          "copySafeClaims": 2,
+          "copySafeRate": 33,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 33,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": ""
+    },
+    {
+      "id": "B04",
+      "query": "我想报告一个安全漏洞，应该怎么做？",
+      "expectedSource": "security",
+      "baseline": {
+        "answer": "如果您发现任何安全漏洞，请立即联系相关软件或服务的维护团队，并按照其提供的指导进行报告。通常，这包括通过官方渠道提交漏洞报告，例如访问官方网站上的“安全公告”、“漏洞赏金计划”或直接联系技术支持人员。在报告时，请确保提供尽可能详细的信息，如漏洞描述、复现步骤、影响范围以及您尝试使用的版本等。此外，遵循组织的安全政策和程序是至关重要的。",
+        "keywordHits": 0,
+        "keywordTotal": 3,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 6031
+      },
+      "rag": {
+        "answer": "应通过 GitHub 创建草稿安全通告（[draft Security Advisory](https:/github.com/psf/request/security/advisories/new)），包括：  \n1. 发现代码（用于验证问题）；  \n2. 最短复现代码（必要时提交）；  \n3. 问题描述与影响分析（尽量详细，非英语者可用母语描述）；  \n4. 遵守隐私原则，禁止向第三方透露；  \n5. 若有CVE标识，将获得信用。  \n\n所有内容须在官方文档中指定流程下进行，并确保在两个工作日内收到回应。",
+        "keywordHits": 3,
+        "keywordTotal": 3,
+        "keywordCoverage": 1,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 10701,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "security",
+            "title": "官方安全政策",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md",
+            "evidence": "# Vulnerability Disclosure\n\nIf you think you have found a potential security vulnerability in\nrequests, please open a [draft Security Advisory](https://github.com/psf/requests/security/advisories/new)\nvia GitHub. We will coordinate verification and next steps through\nthat secure medium.\n\nIf English is not your first language, please try to describe the\nproblem and its impact to the best of your ability. For greater detail,\nplease use your native language and we will try our best to translate it\nusing online services.\n\nPlease also include the code you used to find the problem and the\nshortest amount of code necessary to reproduce it.\n\nPlease do not disclose this to anyone else. We will retrieve a CVE\nidentifier if necessary and give you full credit under whatever name or\nalias you provide. We will only request an identifier when we have a fix\nand can publish it in a release.\n\nWe will respect your privacy and will only publicize your involvement if\nyou grant us permission.\n\n## Process\n\nThis following information discusses the process the requests project\nfollows in response to vulnerability disclosures. If you are disclosing\nyou grant us permission.\n\n## Process\n\nThis following information discusses the process the requests project\nfollows in response to vulnerability disclosures. If you are disclosing\na vulnerability, this section of the documentation lets you know how we\nwill respond to your disclosure.\n\n### Timeline\n\nWhen you report an issue, one of the project members will respond to you\nwithin two days *at the outside*. In most cases responses will be\nfaster, usually within 12 hours. This initial response will at the very\nleast confirm receipt of the report.\n\nIf we were able to rapidly reproduce the issue, the initial response\nwill also contain confirmation of the iss",
+            "localPath": "resources/requests/upstream/.github_SECURITY.md",
+            "lineStart": 1,
+            "lineEnd": 67,
+            "score": 17.66
+          }
+        ],
+        "verification": {
+          "factualClaims": 6,
+          "groundedClaims": 1,
+          "paraphrasedClaims": 5,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 6,
+          "formatFlaggedClaims": 1,
+          "formatFlagged": [
+            "应通过 GitHub 创建草稿安全通告（[draft Security Advisory](https:/github.com/psf/request/security/advisories/new)），包括：［https:/github.com/psf/request/security/advisories/new］"
+          ],
+          "copySafeClaims": 0,
+          "copySafeRate": 0,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 17,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": "确认明确给出 SECURITY.md 的 GitHub Draft Security Advisory 入口与最短复现代码；不要附加证据外的隐私告诫。"
+    },
+    {
+      "id": "B05",
+      "query": "怎么安装并发起一个 GET 请求？",
+      "expectedSource": "readme-install",
+      "baseline": {
+        "answer": "要安装 Requests HTTP 库，可以使用 pip 命令：\n\n```bash\npip install requests\n```\n\n然后，你可以通过以下代码发起一个 GET 请求：\n\n```python\nimport requests\n\n# 发起GET请求\nresponse = requests.get('https://httpbin.org/get')\n\n# 打印响应内容\nprint(response.text)\n```\n\n注意：在实际操作中，请确保你已正确安装了 `requests` 库，并且你的 Python 环境支持该库的运行。",
+        "keywordHits": 2,
+        "keywordTotal": 2,
+        "keywordCoverage": 1,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 9720
+      },
+      "rag": {
+        "answer": "安装 Requests 需要运行以下命令：\n\n```bash\n$ python -mpip install requests\n```\n\n发起一个 GET 请求可以使用 `requests.get()` 方法，传入目标 URL 和可选参数，例如：\n\n```python\nimport requests\nr = requests.get('https//httpbin.org/get')\nprint(r.status_code)\n```\n\n请求参数可通过 `params` 参数传递，如：\n```python\nr = requests.get(\"https://httpbin.org/delay\", params={\"delay\": 1})\n```\n\n返回结果是一个 `Response` 对象，可用于获取状态码、头信息和内容。",
+        "keywordHits": 2,
+        "keywordTotal": 2,
+        "keywordCoverage": 1,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 15069,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "readme-install",
+            "title": "官方 README：安装与基础用法",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md",
+            "evidence": "# Requests\n\n[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)\n[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)\n[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)\n[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)\n[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n```python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>> r.json()\n{'authenticated': True, ...}\n```\n\nRequests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data — but nowadays, just use the `json` method!\n\nRequests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.\n\n## Installing Requests and Supported Versions\n\nRequests is available on PyPI:\n\n```console\n$ python -m pip install requests\n```\n\nRequests officially supports Python 3.10+.\n\n## Supported Features & Best–Practices\n\nRequests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.\n\n- Keep-Alive & Connecti",
+            "localPath": "resources/requests/upstream/README.md",
+            "lineStart": 1,
+            "lineEnd": 77,
+            "score": 14.18
+          },
+          {
+            "id": "api-code",
+            "title": "src/requests/api.py：API 实现",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py",
+            "evidence": "    :param timeout: (optional) How many seconds to wait for the server to send data\n        before giving up, as a float, or a :ref:`(connect timeout, read\n        timeout) <timeouts>` tuple.\n    :type timeout: float or tuple\n    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.\n    :type allow_redirects: bool\n    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.\n    :param verify: (optional) Either a boolean, in which case it controls whether we verify\n            the server's TLS certificate, or a string, in which case it must be a path\n            to a CA bundle to use. Defaults to ``True``.\n    :param stream: (optional) if ``False``, the response content will be immediately downloaded.\n    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, ('cert', 'key') pair.\n    :return: :class:`Response <Response>` object\n    :rtype: requests.Response\n\n    Usage::\n\n      >>> import requests\n      >>> req = requests.request('GET', 'https://httpbin.org/get')\n    :rtype: requests.Response\n\n    Usage::\n\n      >>> import requests\n      >>> req = requests.request('GET', 'https://httpbin.org/get')\n      >>> req\n      <Response [200]>\n    \"\"\"\n\n    # By using the 'with' statement we are sure the session is closed, thus we\n    # avoid leaving sockets open which can trigger a ResourceWarning in some\n    # cases, and look like a memory leak in others.\n    with sessions.Session() as session:\n        return session.request(method=method, url=url, **kwargs)\n\n\ndef get(\n    url: _t.UriType, params: _t.ParamsType = None, **kwargs: Unpack[_t.GetKwargs]\n) -> Response:\n    r\"\"\"Sends a GET request.\n\n    :param url: URL for the new :class:`Request` object.\n   ",
+            "localPath": "resources/requests/upstream/src_requests_api.py",
+            "lineStart": 44,
+            "lineEnd": 120,
+            "score": 8.19
+          },
+          {
+            "id": "tests",
+            "title": "官方测试文件",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/tests/test_requests.py",
+            "evidence": "        assert request.url == expected\n\n    def test_params_original_order_is_preserved_by_default(self):\n        param_ordered_dict = collections.OrderedDict(\n            ((\"z\", 1), (\"a\", 1), (\"k\", 1), (\"d\", 1))\n        )\n        session = requests.Session()\n        request = requests.Request(\n            \"GET\", \"http://example.com/\", params=param_ordered_dict\n        )\n        prep = session.prepare_request(request)\n        assert prep.url == \"http://example.com/?z=1&a=1&k=1&d=1\"\n\n    def test_params_bytes_are_encoded(self):\n        request = requests.Request(\n            \"GET\", \"http://example.com\", params=b\"test=foo\"\n        ).prepare()\n        assert request.url == \"http://example.com/?test=foo\"\n\n    def test_binary_put(self):\n        request = requests.Request(\n            \"PUT\", \"http://example.com\", data=\"ööö\".encode()\n        ).prepare()\n        assert isinstance(request.body, bytes)\n\n    def test_whitespaces_are_removed_from_url(self):\n        # Test for issue #3696\n        request = requests.Request(\"GET\", \" http://example.com\").prepare()\n        assert request.url == \"http://example.com/\"",
+            "localPath": "resources/requests/upstream/tests_test_requests.py",
+            "lineStart": 165,
+            "lineEnd": 193,
+            "score": 4.27
+          }
+        ],
+        "verification": {
+          "factualClaims": 15,
+          "groundedClaims": 15,
+          "paraphrasedClaims": 0,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 15,
+          "formatFlaggedClaims": 2,
+          "formatFlagged": [
+            "r = requests.get('https//httpbin.org/get')［https//httpbin.org/get］",
+            "r = requests.get(\"https://httpbin.org/delay\", params={\"delay\": 1})［https://httpbin.org/delay］"
+          ],
+          "copySafeClaims": 13,
+          "copySafeRate": 87,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 100,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": ""
+    },
+    {
+      "id": "B06",
+      "query": "Requests 的测试文件在哪里？",
+      "expectedSource": "tests",
+      "baseline": {
+        "answer": "Requests 的测试文件通常位于其源代码仓库中的 `tests/` 目录下。具体路径可能因版本而异，但一般在 `requests/tests/` 文件夹中可以找到相关的单元测试和集成测试文件。这些文件用于验证 Requests 库的功能和行为。要获取最新的测试文件位置，建议查看官方文档或 GitHub 页面上的 README 或其他说明。",
+        "keywordHits": 1,
+        "keywordTotal": 2,
+        "keywordCoverage": 0.5,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 7815
+      },
+      "rag": {
+        "answer": "Requests 的测试文件位于 `tests/` 目录下，主要文件为 `test_requests.py`，该文件在官方仓库中可通过 `https://github.com/PSF/requests/blob/6.../tests/test_requests.py` 访问。此外，开发者的贡献文档也提到了测试的重要性，包括编写能够复现问题的测试用例，并确保所有测试通过。",
+        "keywordHits": 2,
+        "keywordTotal": 2,
+        "keywordCoverage": 1,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 10148,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "tests",
+            "title": "官方测试文件",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/tests/test_requests.py",
+            "evidence": "\"\"\"Tests for Requests.\"\"\"\n\nimport collections\nimport contextlib\nimport io\nimport json\nimport os\nimport pickle\nimport re\nimport tempfile\nimport threading\nimport warnings\nfrom unittest import mock\n\nimport pytest\nimport urllib3\nfrom urllib3.util import Timeout as Urllib3Timeout\n\nimport requests\nfrom requests.adapters import HTTPAdapter\nfrom requests.auth import HTTPDigestAuth, _basic_auth_str\nfrom requests.compat import (\n    JSONDecodeError,\n    Morsel,\n    MutableMapping,\n    builtin_str,\n    cookielib,\n    getproxies,\n    is_urllib3_1,\n    urlparse,\n)\nfrom requests.cookies import cookiejar_from_dict, morsel_to_cookie\nfrom requests.exceptions import (\n    ChunkedEncodingError,\n    ConnectionError,\n    ConnectTimeout,\n    ContentDecodingError,\n    InvalidHeader,\n    InvalidProxyURL,\n    InvalidSchema,\n    InvalidURL,\n    MissingSchema,\n    ProxyError,\n    ReadTimeout,\n    RequestException,\n    RetryError,\n    Timeout,\n    TooManyRedirects,\n    UnrewindableBodyError,\n)\nfrom requests.exceptions import SSLError as RequestsSSLError\nfrom requests.hooks import default_hooks\nfrom requests.models import PreparedRequest, urlencode",
+            "localPath": "resources/requests/upstream/tests_test_requests.py",
+            "lineStart": 1,
+            "lineEnd": 53,
+            "score": 12.02
+          },
+          {
+            "id": "dev-contributing",
+            "title": "开发者贡献文档",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst",
+            "evidence": "getting that contribution accepted, and can save you from putting a lot of work\ninto a contribution that is not suitable for the project.\n\nContribution Suitability\n------------------------\n\nOur project maintainers have the last word on whether or not a contribution is\nsuitable for Requests. All contributions will be considered carefully, but from\ntime to time, contributions will be rejected because they do not suit the\ncurrent goals or needs of the project.\n\nIf your contribution is rejected, don't despair! As long as you followed these\nguidelines, you will have a much better chance of getting your next\ncontribution accepted.\n\n\nCode Contributions\n------------------\n\nSteps for Submitting Code\n~~~~~~~~~~~~~~~~~~~~~~~~~\n\nWhen contributing code, you'll want to follow this checklist:\n\n1. Fork the repository on GitHub.\n2. Run the tests to confirm they all pass on your system. If they don't, you'll\n   need to investigate why they fail. If you're unable to diagnose this\n   yourself, raise it as a bug report by following the guidelines in this\n   document: :ref:`bug-reports`.\n3. Write tests that demonstrate your bug or feature. Ensure that they fail.\n   document: :ref:`bug-reports`.\n3. Write tests that demonstrate your bug or feature. Ensure that they fail.\n4. Make your change.\n5. Run the entire test suite again, confirming that all tests pass *including\n   the ones you just added*.\n6. Send a GitHub Pull Request to the main repository's ``main`` branch.\n   GitHub Pull Requests are the expected method of code collaboration on this\n   project.\n\nThe following sub-sections go into more detail on some of the points above.\n\nCode Review\n~~~~~~~~~~~\n\nContributions will not be merged until they've been code reviewed. You should\nimplement any code review feedback unless you strongly object",
+            "localPath": "resources/requests/upstream/docs_dev_contributing.rst",
+            "lineStart": 46,
+            "lineEnd": 125,
+            "score": 7.92
+          },
+          {
+            "id": "contributing",
+            "title": "官方贡献指南",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md",
+            "evidence": "# Contribution Guidelines\n\nBefore opening any issues or proposing any pull requests, please read\nour [Contributor's Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)\nas well as our [AI Policy](/.github/AI_POLICY.md).\n\nTo get the greatest chance of helpful responses, please also observe the\nfollowing additional notes.\n\n## Questions\n\nThe GitHub issue tracker is for *bug reports* and *feature requests*. Please do\nnot use it to ask questions about how to use Requests. These questions should\ninstead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure\nthat your question is tagged with the `python-requests` tag when asking it on\nStack Overflow, to ensure that it is answered promptly and accurately.\n\n## Good Bug Reports\n\nPlease be aware of the following things when filing bug reports:\n\n1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature\n   to check whether your bug report or feature request has been mentioned in\n   the past. Duplicate bug reports and feature requests are a huge maintenance\n   burden on the limited resources of the project. If it is clear from your\n   the past. Duplicate bug reports and feature requests are a huge maintenance\n   burden on the limited resources of the project. If it is clear from your\n   report that you would have struggled to find the original, that's ok, but\n   if searching for a selection of words in your issue title would have found\n   the duplicate then the issue will likely be closed extremely abruptly.\n2. When filing bug reports about exceptions or tracebacks, please include the\n   *complete* traceback. Partial tracebacks, or just the exception text, are\n   not helpful. Issues that do not contain complete tracebacks may be closed\n   without warning.\n3. Make sure you provide a",
+            "localPath": "resources/requests/upstream/.github_CONTRIBUTING.md",
+            "lineStart": 1,
+            "lineEnd": 67,
+            "score": 6.52
+          }
+        ],
+        "verification": {
+          "factualClaims": 2,
+          "groundedClaims": 1,
+          "paraphrasedClaims": 1,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 2,
+          "formatFlaggedClaims": 1,
+          "formatFlagged": [
+            "Requests 的测试文件位于 `tests/` 目录下，主要文件为 `test_requests.py`，该文件在官方仓库中可通过 `https://github.com/PSF/requests/blob/6.../tests/test_requests.py` 访问。［https://github.com/PSF/requests/blob/6.../tests/test_requests.py］"
+          ],
+          "copySafeClaims": 0,
+          "copySafeRate": 0,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 50,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": ""
+    },
+    {
+      "id": "B07",
+      "query": "Requests 支持哪些 Python 版本？",
+      "expectedSource": "readme-install",
+      "baseline": {
+        "answer": "Requests 支持 Python 3.4 及以上版本。",
+        "keywordHits": 0,
+        "keywordTotal": 2,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 1540
+      },
+      "rag": {
+        "answer": "Requests officially supports Python 3.10+.  \n证据中未说明",
+        "keywordHits": 1,
+        "keywordTotal": 2,
+        "keywordCoverage": 0.5,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 5747,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "readme-install",
+            "title": "官方 README：安装与基础用法",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md",
+            "evidence": "# Requests\n\n[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)\n[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)\n[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)\n[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)\n[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n```python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>> r.json()\n{'authenticated': True, ...}\n```\n\nRequests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data — but nowadays, just use the `json` method!\n\nRequests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.\n\n## Installing Requests and Supported Versions\n\nRequests is available on PyPI:\n\n```console\n$ python -m pip install requests\n```\n\nRequests officially supports Python 3.10+.\n\n## Supported Features & Best–Practices\n\nRequests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.\n\n- Keep-Alive & Connecti",
+            "localPath": "resources/requests/upstream/README.md",
+            "lineStart": 1,
+            "lineEnd": 77,
+            "score": 16.12
+          },
+          {
+            "id": "dev-contributing",
+            "title": "开发者贡献文档",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst",
+            "evidence": ".. _contributing:\n\nContributor's Guide\n===================\n\nIf you're reading this, you're probably interested in contributing to Requests.\nThank you very much! Open source projects live-and-die based on the support\nthey receive from others, and the fact that you're even considering\ncontributing to the Requests project is *very* generous of you.\n\nThis document lays out guidelines and advice for contributing to this project.\nIf you're thinking of contributing, please start by reading this document and\ngetting a feel for how contributing to this project works. If you have any\nquestions, feel free to reach out to either `Nate Prewitt`_, `Ian Cordasco`_,\nor `Seth Michael Larson`_, the primary maintainers.\n\n.. _Ian Cordasco: https://www.coglib.com/~icordasc/\n.. _Nate Prewitt: https://www.nateprewitt.com/\n.. _Seth Michael Larson: https://sethmlarson.dev/\n\nThe guide is split into sections based on the type of contribution you're\nthinking of making, with a section that covers general guidelines for all\ncontributors.\n\nCode of Conduct\n---------------\n\nThe Python community is made up of members from around the globe with a diverse\ncontributors.\n\nCode of Conduct\n---------------\n\nThe Python community is made up of members from around the globe with a diverse\nset of skills, personalities, and experiences. It is through these differences\nthat our community experiences great successes and continued growth. When you're\nworking with members of the community, follow the\n`Python Software Foundation Code of Conduct`_ to help steer your interactions\nand keep Python a positive, successful, and growing community.\n\n.. _Python Software Foundation Code of Conduct: https://policies.python.org/python.org/code-of-conduct/\n\n.. _early-feedback:\n\nGet Early Feedback\n------------------\n\nIf you are contri",
+            "localPath": "resources/requests/upstream/docs_dev_contributing.rst",
+            "lineStart": 1,
+            "lineEnd": 75,
+            "score": 9.75
+          },
+          {
+            "id": "api-code",
+            "title": "src/requests/api.py：API 实现",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py",
+            "evidence": "\"\"\"\nrequests.api\n~~~~~~~~~~~~\n\nThis module implements the Requests API.\n\n:copyright: (c) 2012 by Kenneth Reitz.\n:license: Apache2, see LICENSE for more details.\n\"\"\"\n\nfrom __future__ import annotations\n\nfrom typing import TYPE_CHECKING\n\nfrom . import sessions\nfrom .models import Response\n\nif TYPE_CHECKING:\n    from typing_extensions import Unpack\n\n    from . import _types as _t\n\n\ndef request(\n    method: str, url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]\n) -> Response:\n    \"\"\"Constructs and sends a :class:`Request <Request>`.\n\n    :param method: method for the new :class:`Request` object: ``GET``, ``OPTIONS``, ``HEAD``, ``POST``, ``PUT``, ``PATCH``, or ``DELETE``.\n    :param url: URL for the new :class:`Request` object.\n    :param params: (optional) Dictionary, list of tuples or bytes to send\n        in the query string for the :class:`Request`.\n    :param data: (optional) Dictionary, list of tuples, bytes, or file-like\n        object to send in the body of the :class:`Request`.\n    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.\n        object to send in the body of the :class:`Request`.\n    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.\n    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.\n    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.\n    :param files: (optional) Dictionary of ``'name': file-like-objects`` (or ``{'name': file-tuple}``) for multipart encoding upload.\n        ``file-tuple`` can be a 2-tuple ``('filename', fileobj)``, 3-tuple ``('filename', fileobj, 'content_type')``\n        or a 4-tuple ``('filename', fileobj, 'content_type', custom_headers)``, where ``'con",
+            "localPath": "resources/requests/upstream/src_requests_api.py",
+            "lineStart": 1,
+            "lineEnd": 62,
+            "score": 6.62
+          }
+        ],
+        "verification": {
+          "factualClaims": 1,
+          "groundedClaims": 1,
+          "paraphrasedClaims": 0,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 1,
+          "formatFlaggedClaims": 0,
+          "formatFlagged": [],
+          "copySafeClaims": 1,
+          "copySafeRate": 100,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 100,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": "核对版本结论和 README 引用。"
+    },
+    {
+      "id": "B08",
+      "query": "如何设置 timeout 并复用连接？",
+      "expectedSource": "readme-install",
+      "baseline": {
+        "answer": "在使用 `requests` 库时，可以通过以下方式设置超时和复用连接：\n\n1. **设置超时**：\n   - 使用 `timeout` 参数来指定请求的超时时间（单位为秒）。例如，在发送请求时可以这样写：\n     ```python\n     import requests\n\n     response = requests.get('https://example.com', timeout=5)\n     ```\n     这里设置了请求的最大等待时间为 5 秒。\n\n2. **复用连接**：\n   - 可以通过设置 `session` 对象来启用连接复用。创建一个 `Session` 实例后，可以在多个请求中重用已建立的连接，从而提高效率。\n     ```python\n     session = requests.Session()\n     response = session.get('https://example.org')\n     ```\n\n3. **配置默认超时和连接池大小**：\n   - 在某些情况下，还可以通过 `proxies`, `verify`, 和其他参数进行更细粒度的控制。但通常来说，对于大多数场景，直接使用 `timeout` 和 `session` 已足够满足需求。\n\n综上所述，要同时设置超时并复用连接，只需创建一个 `Session` 对象，并为其设定合适的超时值即可。",
+        "keywordHits": 2,
+        "keywordTotal": 2,
+        "keywordCoverage": 1,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 16261
+      },
+      "rag": {
+        "answer": "设置 timeout 需要通过 `timeout` 参数指定，其类型为浮点数或 `(connect_timeout, read_timeout)` 元组。在 API 中，`timeout` 参数用于控制请求超时时间，包括连接建立时间和读取数据的时间。复用连接可以通过创建 `Session` 对象来实现，并在 `Session` 上调用 `request()` 方法发送请求。  \n\n使用示例如下：\n\n```python\nimport requests\n\nsession = requests.Session()\nresponse = session.get('https://http.bin.org/get', timeout=(5, 10))\n```\n\n上述代码中，`timeout` 参数的值分别为连接超时时间为 5 秒，读取超时时间为 10 秒。此方法确保了请求不会因为网络延迟而无限期等待服务器返回结果。",
+        "keywordHits": 2,
+        "keywordTotal": 2,
+        "keywordCoverage": 1,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 18554,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "readme-install",
+            "title": "官方 README：安装与基础用法",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md",
+            "evidence": "# Requests\n\n[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)\n[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)\n[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)\n[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)\n[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n```python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>> r.json()\n{'authenticated': True, ...}\n```\n\nRequests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data — but nowadays, just use the `json` method!\n\nRequests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.\n\n## Installing Requests and Supported Versions\n\nRequests is available on PyPI:\n\n```console\n$ python -m pip install requests\n```\n\nRequests officially supports Python 3.10+.\n\n## Supported Features & Best–Practices\n\nRequests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.\n\n- Keep-Alive & Connecti",
+            "localPath": "resources/requests/upstream/README.md",
+            "lineStart": 1,
+            "lineEnd": 77,
+            "score": 18.15
+          },
+          {
+            "id": "tests",
+            "title": "官方测试文件",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/tests/test_requests.py",
+            "evidence": "        r.headers = {\n            \"cache-control\": \"public, max-age=60, s-maxage=60\",\n            \"connection\": \"keep-alive\",\n            \"content-encoding\": \"gzip\",\n            \"content-type\": \"application/json; charset=utf-8\",\n            \"date\": \"Sat, 26 Jan 2013 16:47:56 GMT\",\n            \"etag\": '\"6ff6a73c0e446c1f61614769e3ceb778\"',\n            \"last-modified\": \"Sat, 26 Jan 2013 16:22:39 GMT\",\n            \"link\": (\n                \"<https://api.github.com/users/kennethreitz/repos?\"\n                'page=2&per_page=10>; rel=\"next\", <https://api.github.'\n                \"com/users/kennethreitz/repos?page=7&per_page=10>; \"\n                ' rel=\"last\"'\n            ),\n            \"server\": \"GitHub.com\",\n            \"status\": \"200 OK\",\n            \"vary\": \"Accept\",\n            \"x-content-type-options\": \"nosniff\",\n            \"x-github-media-type\": \"github.beta\",\n            \"x-ratelimit-limit\": \"60\",\n            \"x-ratelimit-remaining\": \"57\",\n        }\n        assert r.links[\"next\"][\"rel\"] == \"next\"\n\n    def test_cookie_parameters(self):\n        key = \"some_cookie\"\n        value = \"some_value\"",
+            "localPath": "resources/requests/upstream/tests_test_requests.py",
+            "lineStart": 1274,
+            "lineEnd": 1300,
+            "score": 8.44
+          },
+          {
+            "id": "api-code",
+            "title": "src/requests/api.py：API 实现",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py",
+            "evidence": "        object to send in the body of the :class:`Request`.\n    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.\n    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.\n    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.\n    :param files: (optional) Dictionary of ``'name': file-like-objects`` (or ``{'name': file-tuple}``) for multipart encoding upload.\n        ``file-tuple`` can be a 2-tuple ``('filename', fileobj)``, 3-tuple ``('filename', fileobj, 'content_type')``\n        or a 4-tuple ``('filename', fileobj, 'content_type', custom_headers)``, where ``'content_type'`` is a string\n        defining the content type of the given file and ``custom_headers`` a dict-like object containing additional headers\n        to add for the file.\n    :param auth: (optional) Auth tuple to enable Basic/Digest/Custom HTTP Auth.\n    :param timeout: (optional) How many seconds to wait for the server to send data\n        before giving up, as a float, or a :ref:`(connect timeout, read\n    :param timeout: (optional) How many seconds to wait for the server to send data\n        before giving up, as a float, or a :ref:`(connect timeout, read\n        timeout) <timeouts>` tuple.\n    :type timeout: float or tuple\n    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.\n    :type allow_redirects: bool\n    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.\n    :param verify: (optional) Either a boolean, in which case it controls whether we verify\n            the server's TLS certificate, or a string, in which case it must be a path\n            to a CA bundle to use.",
+            "localPath": "resources/requests/upstream/src_requests_api.py",
+            "lineStart": 34,
+            "lineEnd": 90,
+            "score": 5.35
+          }
+        ],
+        "verification": {
+          "factualClaims": 11,
+          "groundedClaims": 8,
+          "paraphrasedClaims": 2,
+          "unsupportedClaims": 1,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 1,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 11,
+          "formatFlaggedClaims": 1,
+          "formatFlagged": [
+            "response = session.get('https://http.bin.org/get', timeout=(5, 10))［https://http.bin.org/get］"
+          ],
+          "copySafeClaims": 7,
+          "copySafeRate": 64,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 73,
+          "unsupported": [
+            "上述代码中，`timeout` 参数的值分别为连接超时时间为 5 秒，读取超时时间为 10 秒。"
+          ],
+          "unsupportedByValue": [
+            "上述代码中，`timeout` 参数的值分别为连接超时时间为 5 秒，读取超时时间为 10 秒。［5、10］"
+          ],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": "核对 timeout 和 Session 是否均来自引用证据。"
+    },
+    {
+      "id": "B09",
+      "query": "Issue 中应该包含哪些复现信息？",
+      "expectedSource": "contributing",
+      "baseline": {
+        "answer": "在 Issue 中应包含以下复现信息：\n1. 明确的描述：清晰说明遇到的问题或需要解决的情况。\n2. 环境信息：包括操作系统、Python 版本、Requests 版本等。\n3. 步骤重现：详细列出如何复现该问题的具体步骤。\n4. 错误信息（如果有）：如果存在错误提示，请一并提供。\n5. 预期行为与实际行为对比：说明期望的结果和实际观察到的行为差异。\n\n这些信息有助于开发人员快速理解问题，并进行排查和修复。",
+        "keywordHits": 0,
+        "keywordTotal": 2,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 7435
+      },
+      "rag": {
+        "answer": "Issue 中应包含以下复现信息：\n\n1. **完整的错误堆栈（traceback）**：包括异常类型、消息和上下文；\n2. **具体的代码示例**：能够复现问题的小型 Python 示例，包含必要的导入语句和请求调用；\n3. **环境信息**：使用的 Python 版本、包管理器（pip 或 conda）、依赖库列表；\n4. **行为描述**：预期结果 vs 实际结果，比如是否返回了正确的状态码、是否有超时、是否抛出异常等；\n5. **触发条件**：何时发生此问题（如特定 URL、认证方式、网络状况等）；\n6. **版本信息**：当前运行的 Requests 版本（通过 `pip show requests` 获取）；\n7. **安装方式**：是否手动安装、虚拟环境、全局安装等；\n8. **相关配置**：如果存在特殊设置（如代理、超时、编码等），请一并提供。\n\n[证据中未说明]",
+        "keywordHits": 0,
+        "keywordTotal": 2,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 24577,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "contributing",
+            "title": "官方贡献指南",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md",
+            "evidence": "# Contribution Guidelines\n\nBefore opening any issues or proposing any pull requests, please read\nour [Contributor's Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)\nas well as our [AI Policy](/.github/AI_POLICY.md).\n\nTo get the greatest chance of helpful responses, please also observe the\nfollowing additional notes.\n\n## Questions\n\nThe GitHub issue tracker is for *bug reports* and *feature requests*. Please do\nnot use it to ask questions about how to use Requests. These questions should\ninstead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure\nthat your question is tagged with the `python-requests` tag when asking it on\nStack Overflow, to ensure that it is answered promptly and accurately.\n\n## Good Bug Reports\n\nPlease be aware of the following things when filing bug reports:\n\n1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature\n   to check whether your bug report or feature request has been mentioned in\n   the past. Duplicate bug reports and feature requests are a huge maintenance\n   burden on the limited resources of the project. If it is clear from your\n   the past. Duplicate bug reports and feature requests are a huge maintenance\n   burden on the limited resources of the project. If it is clear from your\n   report that you would have struggled to find the original, that's ok, but\n   if searching for a selection of words in your issue title would have found\n   the duplicate then the issue will likely be closed extremely abruptly.\n2. When filing bug reports about exceptions or tracebacks, please include the\n   *complete* traceback. Partial tracebacks, or just the exception text, are\n   not helpful. Issues that do not contain complete tracebacks may be closed\n   without warning.\n3. Make sure you provide a",
+            "localPath": "resources/requests/upstream/.github_CONTRIBUTING.md",
+            "lineStart": 1,
+            "lineEnd": 67,
+            "score": 22.09
+          },
+          {
+            "id": "security",
+            "title": "官方安全政策",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md",
+            "evidence": "# Vulnerability Disclosure\n\nIf you think you have found a potential security vulnerability in\nrequests, please open a [draft Security Advisory](https://github.com/psf/requests/security/advisories/new)\nvia GitHub. We will coordinate verification and next steps through\nthat secure medium.\n\nIf English is not your first language, please try to describe the\nproblem and its impact to the best of your ability. For greater detail,\nplease use your native language and we will try our best to translate it\nusing online services.\n\nPlease also include the code you used to find the problem and the\nshortest amount of code necessary to reproduce it.\n\nPlease do not disclose this to anyone else. We will retrieve a CVE\nidentifier if necessary and give you full credit under whatever name or\nalias you provide. We will only request an identifier when we have a fix\nand can publish it in a release.\n\nWe will respect your privacy and will only publicize your involvement if\nyou grant us permission.\n\n## Process\n\nThis following information discusses the process the requests project\nfollows in response to vulnerability disclosures. If you are disclosing\nyou grant us permission.\n\n## Process\n\nThis following information discusses the process the requests project\nfollows in response to vulnerability disclosures. If you are disclosing\na vulnerability, this section of the documentation lets you know how we\nwill respond to your disclosure.\n\n### Timeline\n\nWhen you report an issue, one of the project members will respond to you\nwithin two days *at the outside*. In most cases responses will be\nfaster, usually within 12 hours. This initial response will at the very\nleast confirm receipt of the report.\n\nIf we were able to rapidly reproduce the issue, the initial response\nwill also contain confirmation of the iss",
+            "localPath": "resources/requests/upstream/.github_SECURITY.md",
+            "lineStart": 1,
+            "lineEnd": 67,
+            "score": 5.94
+          },
+          {
+            "id": "readme-install",
+            "title": "官方 README：安装与基础用法",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md",
+            "evidence": "# Requests\n\n[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)\n[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)\n[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)\n[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)\n[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n```python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>> r.json()\n{'authenticated': True, ...}\n```\n\nRequests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data — but nowadays, just use the `json` method!\n\nRequests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.\n\n## Installing Requests and Supported Versions\n\nRequests is available on PyPI:\n\n```console\n$ python -m pip install requests\n```\n\nRequests officially supports Python 3.10+.\n\n## Supported Features & Best–Practices\n\nRequests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.\n\n- Keep-Alive & Connecti",
+            "localPath": "resources/requests/upstream/README.md",
+            "lineStart": 1,
+            "lineEnd": 77,
+            "score": 2.71
+          }
+        ],
+        "verification": {
+          "factualClaims": 9,
+          "groundedClaims": 2,
+          "paraphrasedClaims": 6,
+          "unsupportedClaims": 1,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 9,
+          "formatFlaggedClaims": 0,
+          "formatFlagged": [],
+          "copySafeClaims": 2,
+          "copySafeRate": 22,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 22,
+          "unsupported": [
+            "环境信息**：使用的 Python 版本、包管理器（pip 或 conda）、依赖库列表；"
+          ],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": "核对版本、环境、最小复现、实际和预期结果是否明确。"
+    },
+    {
+      "id": "B10",
+      "query": "提交代码前为什么要先写测试？",
+      "expectedSource": "dev-contributing",
+      "baseline": {
+        "answer": "在提交代码之前编写测试是为了确保代码的正确性和稳定性。通过测试可以验证新功能是否按预期工作，并且能够及时发现潜在的问题或缺陷。这有助于提高软件质量、减少后期修复的工作量，并为团队成员提供信心，使他们更愿意使用和维护这些代码。此外，良好的测试实践还能帮助团队更好地理解系统行为，促进持续集成与交付流程。",
+        "keywordHits": 0,
+        "keywordTotal": 2,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 5181
+      },
+      "rag": {
+        "answer": "提交代码前先写测试是为了确保新功能不会引入已知问题，并防止修复后产生回归。根据官方贡献指南，开发者需编写能复现问题且会导致测试失败的测试用例，然后运行完整的测试套件以验证更改是否稳定。这符合“先写能复现出问题的测试，再进行修改并重新运行所有测试”的流程，从而保障代码质量。此做法也体现在开发者的贡献文档中，强调了测试的重要性。此外，在提交Pull Request之前，必须保证所有相关测试通过，这是维护团队共识的一部分。因此，遵循这一过程有助于提高项目的整体健壮性和可靠性。证据中未说明。",
+        "keywordHits": 1,
+        "keywordTotal": 2,
+        "keywordCoverage": 0.5,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 15898,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "contributing",
+            "title": "官方贡献指南",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md",
+            "evidence": "# Contribution Guidelines\n\nBefore opening any issues or proposing any pull requests, please read\nour [Contributor's Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)\nas well as our [AI Policy](/.github/AI_POLICY.md).\n\nTo get the greatest chance of helpful responses, please also observe the\nfollowing additional notes.\n\n## Questions\n\nThe GitHub issue tracker is for *bug reports* and *feature requests*. Please do\nnot use it to ask questions about how to use Requests. These questions should\ninstead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure\nthat your question is tagged with the `python-requests` tag when asking it on\nStack Overflow, to ensure that it is answered promptly and accurately.\n\n## Good Bug Reports\n\nPlease be aware of the following things when filing bug reports:\n\n1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature\n   to check whether your bug report or feature request has been mentioned in\n   the past. Duplicate bug reports and feature requests are a huge maintenance\n   burden on the limited resources of the project. If it is clear from your\n   the past. Duplicate bug reports and feature requests are a huge maintenance\n   burden on the limited resources of the project. If it is clear from your\n   report that you would have struggled to find the original, that's ok, but\n   if searching for a selection of words in your issue title would have found\n   the duplicate then the issue will likely be closed extremely abruptly.\n2. When filing bug reports about exceptions or tracebacks, please include the\n   *complete* traceback. Partial tracebacks, or just the exception text, are\n   not helpful. Issues that do not contain complete tracebacks may be closed\n   without warning.\n3. Make sure you provide a",
+            "localPath": "resources/requests/upstream/.github_CONTRIBUTING.md",
+            "lineStart": 1,
+            "lineEnd": 67,
+            "score": 11.44
+          },
+          {
+            "id": "dev-contributing",
+            "title": "开发者贡献文档",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst",
+            "evidence": "getting that contribution accepted, and can save you from putting a lot of work\ninto a contribution that is not suitable for the project.\n\nContribution Suitability\n------------------------\n\nOur project maintainers have the last word on whether or not a contribution is\nsuitable for Requests. All contributions will be considered carefully, but from\ntime to time, contributions will be rejected because they do not suit the\ncurrent goals or needs of the project.\n\nIf your contribution is rejected, don't despair! As long as you followed these\nguidelines, you will have a much better chance of getting your next\ncontribution accepted.\n\n\nCode Contributions\n------------------\n\nSteps for Submitting Code\n~~~~~~~~~~~~~~~~~~~~~~~~~\n\nWhen contributing code, you'll want to follow this checklist:\n\n1. Fork the repository on GitHub.\n2. Run the tests to confirm they all pass on your system. If they don't, you'll\n   need to investigate why they fail. If you're unable to diagnose this\n   yourself, raise it as a bug report by following the guidelines in this\n   document: :ref:`bug-reports`.\n3. Write tests that demonstrate your bug or feature. Ensure that they fail.\n   document: :ref:`bug-reports`.\n3. Write tests that demonstrate your bug or feature. Ensure that they fail.\n4. Make your change.\n5. Run the entire test suite again, confirming that all tests pass *including\n   the ones you just added*.\n6. Send a GitHub Pull Request to the main repository's ``main`` branch.\n   GitHub Pull Requests are the expected method of code collaboration on this\n   project.\n\nThe following sub-sections go into more detail on some of the points above.\n\nCode Review\n~~~~~~~~~~~\n\nContributions will not be merged until they've been code reviewed. You should\nimplement any code review feedback unless you strongly object",
+            "localPath": "resources/requests/upstream/docs_dev_contributing.rst",
+            "lineStart": 46,
+            "lineEnd": 125,
+            "score": 10.3
+          },
+          {
+            "id": "readme-install",
+            "title": "官方 README：安装与基础用法",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md",
+            "evidence": "# Requests\n\n[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)\n[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)\n[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)\n[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)\n[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n```python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>> r.json()\n{'authenticated': True, ...}\n```\n\nRequests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data — but nowadays, just use the `json` method!\n\nRequests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.\n\n## Installing Requests and Supported Versions\n\nRequests is available on PyPI:\n\n```console\n$ python -m pip install requests\n```\n\nRequests officially supports Python 3.10+.\n\n## Supported Features & Best–Practices\n\nRequests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.\n\n- Keep-Alive & Connecti",
+            "localPath": "resources/requests/upstream/README.md",
+            "lineStart": 1,
+            "lineEnd": 77,
+            "score": 4.62
+          }
+        ],
+        "verification": {
+          "factualClaims": 6,
+          "groundedClaims": 0,
+          "paraphrasedClaims": 5,
+          "unsupportedClaims": 1,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 6,
+          "formatFlaggedClaims": 0,
+          "formatFlagged": [],
+          "copySafeClaims": 0,
+          "copySafeRate": 0,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 0,
+          "unsupported": [
+            "这符合“先写能复现出问题的测试，再进行修改并重新运行所有测试”的流程，从而保障代码质量。"
+          ],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": "核对测试先行、全量测试和 PR 流程。"
+    },
+    {
+      "id": "B11",
+      "query": "Apache-2.0 允许修改后再分发吗？",
+      "expectedSource": "license",
+      "baseline": {
+        "answer": "是的，Apache-2.0 许可证允许修改并重新分发软件，但必须遵守许可证的条款和条件。具体来说，你可以自由地对代码进行修改，并在新的版本中再次发布，只要确保所有源文件都包含原始的 Apache-2.0 标志（即版权声明），并且你不能将任何部分以任何形式用于商业目的而未获得许可。此外，如果你使用了第三方库或组件，也应遵循其各自的许可证要求。",
+        "keywordHits": 1,
+        "keywordTotal": 2,
+        "keywordCoverage": 0.5,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 7248
+      },
+      "rag": {
+        "answer": "Apache-2.0 许可证允许修改后再分发，但需遵守特定条件。根据 LICENSE 文件中的第 4 节数据：\n\n(a) 必须将所有副本的许可协议传递给接收者；\n(b) 修改过的文件必须清晰注明更改内容；\n(c) 在源码形式的衍生作品中应保留原始版权、专利、商标和署名通知；\n(d) 若存在名为 \"NOTICE\" 的文本文件，则衍生作品也必须包含该文件中的所有版权声明，除非这些通知不属于衍生作品的一部分。\n\n此外，在进行再分发时，可以增加自己的版权声明，并提供不同的使用、复制或分发许可条款。此授权适用于所有受保护的专利权利，包括但不限于通过贡献者的贡献而产生的侵权行为。如果发生专利诉讼，已授予的许可将在提起法律行动之日起终止。",
+        "keywordHits": 1,
+        "keywordTotal": 2,
+        "keywordCoverage": 0.5,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 16963,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "license",
+            "title": "官方 LICENSE",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/LICENSE",
+            "evidence": "\n                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n……（中间定义条款略，以下为与“再分发/分发”相关的条款）……\n\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity ",
+            "localPath": "resources/requests/upstream/LICENSE",
+            "lineStart": 1,
+            "lineEnd": 126,
+            "score": 18.63
+          },
+          {
+            "id": "api-code",
+            "title": "src/requests/api.py：API 实现",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py",
+            "evidence": "\"\"\"\nrequests.api\n~~~~~~~~~~~~\n\nThis module implements the Requests API.\n\n:copyright: (c) 2012 by Kenneth Reitz.\n:license: Apache2, see LICENSE for more details.\n\"\"\"\n\nfrom __future__ import annotations\n\nfrom typing import TYPE_CHECKING\n\nfrom . import sessions\nfrom .models import Response\n\nif TYPE_CHECKING:\n    from typing_extensions import Unpack\n\n    from . import _types as _t\n\n\ndef request(\n    method: str, url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]\n) -> Response:\n    \"\"\"Constructs and sends a :class:`Request <Request>`.\n\n    :param method: method for the new :class:`Request` object: ``GET``, ``OPTIONS``, ``HEAD``, ``POST``, ``PUT``, ``PATCH``, or ``DELETE``.\n    :param url: URL for the new :class:`Request` object.\n    :param params: (optional) Dictionary, list of tuples or bytes to send\n        in the query string for the :class:`Request`.\n    :param data: (optional) Dictionary, list of tuples, bytes, or file-like\n        object to send in the body of the :class:`Request`.\n    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.\n        object to send in the body of the :class:`Request`.\n    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.\n    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.\n    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.\n    :param files: (optional) Dictionary of ``'name': file-like-objects`` (or ``{'name': file-tuple}``) for multipart encoding upload.\n        ``file-tuple`` can be a 2-tuple ``('filename', fileobj)``, 3-tuple ``('filename', fileobj, 'content_type')``\n        or a 4-tuple ``('filename', fileobj, 'content_type', custom_headers)``, where ``'con",
+            "localPath": "resources/requests/upstream/src_requests_api.py",
+            "lineStart": 1,
+            "lineEnd": 62,
+            "score": 3.53
+          }
+        ],
+        "verification": {
+          "factualClaims": 8,
+          "groundedClaims": 3,
+          "paraphrasedClaims": 5,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 8,
+          "formatFlaggedClaims": 0,
+          "formatFlagged": [],
+          "copySafeClaims": 3,
+          "copySafeRate": 38,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 38,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": "只依据 LICENSE 核对修改、分发和保留声明义务。"
+    },
+    {
+      "id": "B12",
+      "query": "安全漏洞报告需要放哪些复现内容？",
+      "expectedSource": "security",
+      "baseline": {
+        "answer": "在提交安全漏洞报告时，应包含以下复现内容：\n\n1. 漏洞的详细描述（包括受影响的系统、版本和环境）；\n2. 漏洞的具体行为或影响（如攻击路径、触发条件等）；\n3. 复现步骤（说明如何重现该漏洞）；\n4. 可验证的证明材料（例如日志、截图、错误消息等）；\n5. 漏洞的影响范围（如数据泄露、权限提升等）；\n6. 验证方法（用于确认漏洞的存在性）。\n\n这些内容有助于开发团队快速定位并修复漏洞。",
+        "keywordHits": 0,
+        "keywordTotal": 2,
+        "keywordCoverage": 0,
+        "ai": true,
+        "responseMode": "model",
+        "latencyMs": 8357
+      },
+      "rag": {
+        "answer": "安全漏洞报告需提交以下内容：\n1. 发现代码（用于验证问题的代码片段）\n2. 最短复现代码（能复现问题的最小示例代码）\n3. 问题与影响描述（包括风险等级、受影响范围等）\n4. 保密要求（禁止向第三方透露，除非获得授权）\n\n根据官方《Security Policy》文档，所有信息均需通过 GitHub 的 Draft Security Advisory 页面提交，并确保符合上述要求。",
+        "keywordHits": 1,
+        "keywordTotal": 2,
+        "keywordCoverage": 0.5,
+        "ai": true,
+        "responseMode": "model",
+        "model": "Qwen3-VL-2B-Instruct (local)",
+        "latencyMs": 10521,
+        "sourceHit": true,
+        "sources": [
+          {
+            "id": "security",
+            "title": "官方安全政策",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md",
+            "evidence": "# Vulnerability Disclosure\n\nIf you think you have found a potential security vulnerability in\nrequests, please open a [draft Security Advisory](https://github.com/psf/requests/security/advisories/new)\nvia GitHub. We will coordinate verification and next steps through\nthat secure medium.\n\nIf English is not your first language, please try to describe the\nproblem and its impact to the best of your ability. For greater detail,\nplease use your native language and we will try our best to translate it\nusing online services.\n\nPlease also include the code you used to find the problem and the\nshortest amount of code necessary to reproduce it.\n\nPlease do not disclose this to anyone else. We will retrieve a CVE\nidentifier if necessary and give you full credit under whatever name or\nalias you provide. We will only request an identifier when we have a fix\nand can publish it in a release.\n\nWe will respect your privacy and will only publicize your involvement if\nyou grant us permission.\n\n## Process\n\nThis following information discusses the process the requests project\nfollows in response to vulnerability disclosures. If you are disclosing\nyou grant us permission.\n\n## Process\n\nThis following information discusses the process the requests project\nfollows in response to vulnerability disclosures. If you are disclosing\na vulnerability, this section of the documentation lets you know how we\nwill respond to your disclosure.\n\n### Timeline\n\nWhen you report an issue, one of the project members will respond to you\nwithin two days *at the outside*. In most cases responses will be\nfaster, usually within 12 hours. This initial response will at the very\nleast confirm receipt of the report.\n\nIf we were able to rapidly reproduce the issue, the initial response\nwill also contain confirmation of the iss",
+            "localPath": "resources/requests/upstream/.github_SECURITY.md",
+            "lineStart": 1,
+            "lineEnd": 67,
+            "score": 20.75
+          },
+          {
+            "id": "license",
+            "title": "官方 LICENSE",
+            "source": "https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/LICENSE",
+            "evidence": "      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perp",
+            "localPath": "resources/requests/upstream/LICENSE",
+            "lineStart": 43,
+            "lineEnd": 111,
+            "score": 4.34
+          }
+        ],
+        "verification": {
+          "factualClaims": 6,
+          "groundedClaims": 1,
+          "paraphrasedClaims": 5,
+          "unsupportedClaims": 0,
+          "misCitedClaims": 0,
+          "unsupportedByValueClaims": 0,
+          "unsupportedByEntityClaims": 0,
+          "unsupportedByAttributeClaims": 0,
+          "formatCheckedClaims": 6,
+          "formatFlaggedClaims": 0,
+          "formatFlagged": [],
+          "copySafeClaims": 1,
+          "copySafeRate": 17,
+          "formatMethod": "格式层（独立于三态）：逐句提取 URL、路径、文件名和裸域名，URL 先查 https?:/{1,2} 的斜杠格式，再用 URL 解析校验 host 与 path 是否在证据原文中出现；路径/文件名要求整体逐字出现；裸域名要求出现在证据中。只要有一项不通过，copySafe=false，但不改变该句原有的有据/改写/无据判定，也不改变 42/82 的历史口径。",
+          "coverage": 17,
+          "unsupported": [],
+          "unsupportedByValue": [],
+          "unsupportedByEntity": [],
+          "unsupportedByAttribute": [],
+          "method": "按句核验：先做三项断言校验——① 值校验：句子中出现的日期、版本号、数字（按完整数字记号比较，\"3\" 不等于 \"3.10\"）必须在检索到的证据里找到，日期还需按相邻数字序列匹配；② 名称校验：当证据命中了句子的一部分、但句中另有一个专有名称在证据里完全不存在时判为\"无据\"；③ 属性校验：句子用中文量词（次/个/条/天/周/遍）量化某个属性时，该属性在术语表里对应的英文词必须在证据中出现，否则判为\"无据\"。三项都通过后，引用标识或关键英文术语在证据中出现，或该句与证据窗口的字符二元组重合度≥0.42 记为“有据”；引用了 A 资料却只能由 B 资料支持记为“错引”；不含数字、路径和标识符的改写句记为“语义改写”；含具体事实却无任何字面支撑的句子记为“无据”。"
+        }
+      },
+      "humanReview": "核对私密入口、发现代码和最短复现代码，不把安全问题写入公开 Issue。"
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "cases": 12,
+      "averageKeywordCoverage": 0.27,
+      "averageLatencyMs": 8808,
+      "fullKeywordCases": 2,
+      "modelGeneratedCases": 12,
+      "ruleFallbackCases": 0
+    },
+    "rag": {
+      "cases": 12,
+      "averageKeywordCoverage": 0.6,
+      "averageLatencyMs": 14587,
+      "fullKeywordCases": 5,
+      "modelGeneratedCases": 12,
+      "ruleFallbackCases": 0,
+      "expectedSourceHitRate": 100,
+      "groundedClaims": 42,
+      "factualClaims": 82,
+      "unsupportedClaims": 3,
+      "paraphrasedClaims": 37,
+      "misCitedClaims": 0,
+      "unsupportedByValueClaims": 1,
+      "unsupportedByEntityClaims": 0,
+      "unsupportedByAttributeClaims": 0,
+      "formatCheckedClaims": 82,
+      "formatFlaggedClaims": 6,
+      "copySafeClaims": 36,
+      "formatFlagged": [
+        "B01: 根据证据内容，`get` 方法的具体实现位置为 `src/requests/api.p`，其功能基于 `request` 函数的调用，而 `request` 函数本身在 `src/requests/__init__.py` 中被注册。［src/requests/api.p、src/requests/__init__.py、api.p、__init__.py］",
+        "B04: 应通过 GitHub 创建草稿安全通告（[draft Security Advisory](https:/github.com/psf/request/security/advisories/new)），包括：［https:/github.com/psf/request/security/advisories/new］",
+        "B05: r = requests.get('https//httpbin.org/get')［https//httpbin.org/get］",
+        "B05: r = requests.get(\"https://httpbin.org/delay\", params={\"delay\": 1})［https://httpbin.org/delay］",
+        "B06: Requests 的测试文件位于 `tests/` 目录下，主要文件为 `test_requests.py`，该文件在官方仓库中可通过 `https://github.com/PSF/requests/blob/6.../tests/test_requests.py` 访问。［https://github.com/PSF/requests/blob/6.../tests/test_requests.py］",
+        "B08: response = session.get('https://http.bin.org/get', timeout=(5, 10))［https://http.bin.org/get］"
+      ]
+    }
+  },
+  "reverifiedAt": "2026-11-17T09:24:04.475Z",
+  "reverifiedWith": "lib/verify.mjs R1 值级校验 + R2 断言名称校验 + 格式层（URL/路径/域名）"
+}

@@ -1,0 +1,72 @@
+{
+  "capturedAt": "2026-10-26T16:52:17.699Z",
+  "project": "Requests HTTP 库",
+  "snapshotCommit": "611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60",
+  "totalChunks": 149,
+  "averageChunkChars": 1102,
+  "documents": [
+    {
+      "id": "readme-install",
+      "type": "README",
+      "title": "官方 README：安装与基础用法",
+      "chars": 3065,
+      "chunkCount": 3,
+      "firstLine": 1,
+      "lastLine": 77
+    },
+    {
+      "id": "api-code",
+      "type": "CODE",
+      "title": "src/requests/api.py：API 实现",
+      "chars": 8256,
+      "chunkCount": 8,
+      "firstLine": 1,
+      "lastLine": 181
+    },
+    {
+      "id": "contributing",
+      "type": "CONTRIBUTING",
+      "title": "官方贡献指南",
+      "chars": 3949,
+      "chunkCount": 4,
+      "firstLine": 1,
+      "lastLine": 67
+    },
+    {
+      "id": "security",
+      "type": "SECURITY",
+      "title": "官方安全政策",
+      "chars": 4383,
+      "chunkCount": 4,
+      "firstLine": 1,
+      "lastLine": 85
+    },
+    {
+      "id": "license",
+      "type": "LICENSE",
+      "title": "官方 LICENSE",
+      "chars": 11549,
+      "chunkCount": 11,
+      "firstLine": 1,
+      "lastLine": 176
+    },
+    {
+      "id": "dev-contributing",
+      "type": "DOC",
+      "title": "开发者贡献文档",
+      "chars": 7426,
+      "chunkCount": 7,
+      "firstLine": 1,
+      "lastLine": 166
+    },
+    {
+      "id": "tests",
+      "type": "TEST",
+      "title": "官方测试文件",
+      "chars": 125580,
+      "chunkCount": 112,
+      "firstLine": 1,
+      "lastLine": 3095
+    }
+  ]
+}

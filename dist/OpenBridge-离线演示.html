@@ -1,0 +1,3235 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenBridge 离线演示 · 12 题真实回放</title>
+<style>
+:root{--ink:#13233d;--muted:#71809a;--subtle:#98a6ba;--line:#e5eaf2;--surface:#fff;--canvas:#f3f6fb;--navy:#1b3d6d;--blue:#2e6cff;--blue-soft:#eaf1ff;--green:#1f9e6e;--green-bg:#eaf8f1;--amber:#b07a16;--amber-bg:#fdf4df;--red:#cf4d4d;--red-bg:#fdeeee;--shadow:0 14px 34px rgba(37,56,86,.08)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei","Segoe UI",sans-serif}
+.replay-banner{background:linear-gradient(90deg,#1b3d6d,#2e6cff);color:#fff;padding:14px 34px;font-size:13px;line-height:1.55}
+.replay-banner b{font-size:14px}
+.replay-banner .sub{opacity:.86;display:block;margin-top:2px}
+.topbar{height:70px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 34px}
+.brand-mark{width:36px;height:36px;border-radius:11px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;box-shadow:0 7px 15px rgba(27,61,109,.24)}
+.brand-name{font-weight:800;font-size:18px}.brand-subtitle{color:var(--muted);font-size:12px;margin-top:2px}
+.workspace{display:flex;min-height:calc(100vh - 118px)}
+.sidebar{width:300px;flex:0 0 300px;background:#f8faff;border-right:1px solid var(--line);padding:18px 14px;overflow-y:auto;max-height:calc(100vh - 118px);position:sticky;top:0}
+.legend{font-size:11px;color:var(--muted);line-height:1.9;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:14px}
+.legend b{display:block;color:var(--ink);margin-bottom:4px}
+.qnav{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:7px;text-align:left;display:flex;gap:9px;align-items:baseline}
+.qnav:hover{border-color:var(--blue);background:var(--blue-soft)}
+.qnav-id{font-weight:800;color:var(--blue);font-size:12px;flex:0 0 auto}
+.qnav-text{font-size:12.5px;color:var(--ink)}
+.main{flex:1;padding:28px 36px 70px;max-width:1180px}
+.summary{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 18px;box-shadow:var(--shadow)}
+.stat .v{font-size:24px;font-weight:850;letter-spacing:-.03em}.stat .k{color:var(--muted);font-size:11px;margin-top:3px}
+.qpanel{background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:20px}
+.q-head h2{font-size:19px;margin:0 0 4px}.q-meta{color:var(--subtle);font-size:12px;margin-bottom:16px}
+.block-label{font-size:12px;font-weight:800;color:var(--navy);margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}.rag-dot{background:var(--green)}.base-dot{background:var(--subtle)}
+.verif-bar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.chip{font-size:11.5px;font-weight:700;border-radius:999px;padding:4px 11px}
+.chip.grounded{background:var(--green-bg);color:var(--green)}.chip.paraphrase{background:var(--amber-bg);color:var(--amber)}
+.chip.danger{background:var(--red-bg);color:var(--red)}.chip.ok{background:var(--green-bg);color:var(--green)}.chip.neutral{background:#f1f4f9;color:var(--muted)}
+.answer-text{font-size:13.5px;line-height:2.05;color:#27374f;white-space:pre-wrap}
+.claim{border-radius:4px;padding:1px 1px;cursor:help}
+.claim.grounded{background:var(--green-bg)}.claim.paraphrase{background:var(--amber-bg)}
+.claim.unsupported,.claim.miscited{background:var(--red-bg);color:#a33;text-decoration:underline wavy var(--red)}
+.claim.neutral{color:var(--muted)}
+.claim sup{font-size:9px;font-weight:800;margin-left:1px;padding:0 2px;border-radius:3px}
+.claim.grounded sup{color:var(--green)}.claim.paraphrase sup{color:var(--amber)}.claim.unsupported sup,.claim.miscited sup{color:var(--red)}.claim.neutral sup{color:var(--subtle)}
+.claim.format-error{outline:1px dashed var(--red);outline-offset:1px}
+.claim-format{font-size:9px;font-weight:800;color:var(--red);margin-left:2px;padding:0 2px;border-radius:3px;background:#fff0f0}
+.baseline-block{margin-top:14px;border:1px dashed #d3dceb;border-radius:10px;padding:8px 14px;background:#fafbfe}
+.baseline-block summary{cursor:pointer;font-size:12.5px;font-weight:800;color:var(--muted);display:flex;align-items:center;gap:8px}
+.baseline-text{color:#5b6b84;margin-top:10px}
+.sources-block{margin-top:16px}.src{border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fcfdff}
+.src summary{cursor:pointer;padding:10px 13px;font-size:12.5px;font-weight:700;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.src-id{background:var(--blue-soft);color:var(--blue);border-radius:6px;padding:2px 7px;font-size:11px}
+.src-lines{color:var(--subtle);font-weight:600;font-size:11px;margin-left:auto}
+.src-meta{padding:0 13px 6px;font-size:11px;color:var(--blue);word-break:break-all}
+.src-text{margin:0;padding:10px 13px 13px;font-size:11.5px;line-height:1.7;color:#41506a;white-space:pre-wrap;max-height:340px;overflow:auto;background:#f6f8fc;border-top:1px solid #eef1f7}
+.foot{color:var(--subtle);font-size:11.5px;text-align:center;padding:16px 0 40px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="replay-banner">
+  <b>离线回放 · 无需 GPU 或模型</b>
+  <span class="sub">本页由 scripts/build-offline-demo.mjs 从 results/latest-results.json（2026-10-25T13:48:18.790Z）生成；回答为固定快照下的真实模型生成记录，逐句核验由项目自有代码重算，非实时调用、不可在此页提问。可复现方式：启动模型后运行 node scripts/benchmark.mjs。</span>
+</div>
+<div class="topbar">
+  <div class="brand-mark">OB</div>
+  <div><div class="brand-name">OpenBridge 开源桥</div><div class="brand-subtitle">Requests 固定提交 611c616 · 12 题对照回放</div></div>
+</div>
+<div class="workspace">
+  <aside class="sidebar">
+    <div class="legend"><b>逐句核验图例</b>
+      <span class="chip grounded">有据</span> 与证据吻合<br>
+      <span class="chip paraphrase">语义改写</span> 需人工判断<br>
+      <span class="chip danger">无据/错引</span> 幻觉风险，重点核对<br>
+      <span class="chip danger">格式</span> 路径/URL 不在证据中，勿照抄<br>
+      <span class="chip neutral">说明/建议</span> 不计入事实核验
+    </div>
+    
+    <button class="qnav" data-target="0">
+      <span class="qnav-id">B01</span>
+      <span class="qnav-text">Requests 的 get 方法在哪里实现？</span>
+    </button>
+    <button class="qnav" data-target="1">
+      <span class="qnav-id">B02</span>
+      <span class="qnav-text">贡献代码前要做哪些准备？</span>
+    </button>
+    <button class="qnav" data-target="2">
+      <span class="qnav-id">B03</span>
+      <span class="qnav-text">Requests 用什么许可证，再分发要注意什么？</span>
+    </button>
+    <button class="qnav" data-target="3">
+      <span class="qnav-id">B04</span>
+      <span class="qnav-text">我想报告一个安全漏洞，应该怎么做？</span>
+    </button>
+    <button class="qnav" data-target="4">
+      <span class="qnav-id">B05</span>
+      <span class="qnav-text">怎么安装并发起一个 GET 请求？</span>
+    </button>
+    <button class="qnav" data-target="5">
+      <span class="qnav-id">B06</span>
+      <span class="qnav-text">Requests 的测试文件在哪里？</span>
+    </button>
+    <button class="qnav" data-target="6">
+      <span class="qnav-id">B07</span>
+      <span class="qnav-text">Requests 支持哪些 Python 版本？</span>
+    </button>
+    <button class="qnav" data-target="7">
+      <span class="qnav-id">B08</span>
+      <span class="qnav-text">如何设置 timeout 并复用连接？</span>
+    </button>
+    <button class="qnav" data-target="8">
+      <span class="qnav-id">B09</span>
+      <span class="qnav-text">Issue 中应该包含哪些复现信息？</span>
+    </button>
+    <button class="qnav" data-target="9">
+      <span class="qnav-id">B10</span>
+      <span class="qnav-text">提交代码前为什么要先写测试？</span>
+    </button>
+    <button class="qnav" data-target="10">
+      <span class="qnav-id">B11</span>
+      <span class="qnav-text">Apache-2.0 允许修改后再分发吗？</span>
+    </button>
+    <button class="qnav" data-target="11">
+      <span class="qnav-id">B12</span>
+      <span class="qnav-text">安全漏洞报告需要放哪些复现内容？</span>
+    </button>
+  </aside>
+  <main class="main">
+    <div class="summary">
+      <div class="stat"><div class="v">12</div><div class="k">对照问题数</div></div>
+      <div class="stat"><div class="v">42/82</div><div class="k">事实句有据（逐句核验）</div></div>
+      <div class="stat"><div class="v" style="color:var(--red)">3</div><div class="k">无据/错引具体事实</div></div>
+      <div class="stat"><div class="v" style="color:var(--red)">36/82</div><div class="k">可照抄句（格式层）</div></div>
+      <div class="stat"><div class="v">Qwen3-VL-2B-Instruct</div><div class="k">本地模型</div></div>
+    </div>
+    
+    <article class="qpanel" data-panel="0">
+      <div class="q-head">
+        <h2>Requests 的 get 方法在哪里实现？</h2>
+        <div class="q-meta">B01 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 18.9s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 6</span>
+        <span class="chip paraphrase">改写 0</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 6</span>
+        <span class="chip danger">格式 1</span>
+        <span class="chip ok">可照抄 5</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded" title="引用标识可在证据中找到：get、src/requests/api.py">Requests 的 `get` 方法在 `src/requests/api.py` 文件中定义，位于 `api.py` 模块内。<sup>有据</sup></span><span class="claim grounded" title="引用标识可在证据中找到：url、params">该方法通过 `request()` 函数调用，接受 `url` 和 `params` 参数，并返回 `Response` 对象。<sup>有据</sup></span><span class="claim grounded" title="引用标识可在证据中找到：get">其核心实现位于 `get` 函数中，用于发送 GET 请求。<sup>有据</sup></span><span class="claim grounded" title="引用标识可在证据中找到：get">此外，`get` 方法也支持传递额外参数，包括超时设置、允许重定向等选项。<sup>有据</sup></span><span class="claim grounded format-error" title="引用标识可在证据中找到：get、src/requests/api.p · 格式：src/requests/api.p、src/requests/__init__.py、api.p、__init__.py">根据证据内容，`get` 方法的具体实现位置为 `src/requests/api.p`，其功能基于 `request` 函数的调用，而 `request` 函数本身在 `src/requests/__init__.py` 中被注册。<span class="claim-format">格式</span><sup>有据</sup></span><span class="claim grounded" title="引用标识可在证据中找到：get、api.py">因此，`get` 方法的实现依赖于 `api.py` 文件中的 `request` 函数定义。<sup>有据</sup></span><span class="claim neutral" title="对证据充分性的说明，不计入">证据中未说明。<sup>说明</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">Requests 的 `get` 方法是 Python 标准库中 requests 模块的一部分，它在 `requests` 库的源码中实现。具体来说，该方法位于 `requests.sessions.Session` 类和 `requests.utils` 模块中，其核心逻辑由 `http.client.HTTPConnection` 和 `urllib.parse.urljoin` 等组件支持。
+
+不过，具体的代码实现细节通常不在公开文档或标准 API 中直接展示，而是通过模块内部函数和类来完成请求处理。例如，在 `requests.py` 文件中的 `get()` 函数会调用底层的网络协议（如 HTTP）进行数据传输，并根据 URL、headers、参数等构造请求。这个过程涉及多个子模块，包括但不限于：
+
+- `urlparse`：用于解析URL；
+- `urllib.request` 或 `urllib2`：用于发起HTTP请求；
+- `ssl`：用于安全连接管理；
+- `socket`：用于建立TCP连接；
+- `threading`：可能用于并发处理；
+
+这些组件共同协作以实现对服务器的 GET 请求操作。由于 `requests` 是一个第三方库，其完整实现依赖于 Python 的标准库以及相关的扩展功能。因此，要获取完整的实现细节，建议查阅官方文档或查看项目源码。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">api-code</span> src/requests/api.py：API 实现
+          <span class="src-lines">L44-120</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py</div>
+        <pre class="src-text">    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+        timeout) &lt;timeouts&gt;` tuple.
+    :type timeout: float or tuple
+    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.
+    :type allow_redirects: bool
+    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
+    :param verify: (optional) Either a boolean, in which case it controls whether we verify
+            the server&#39;s TLS certificate, or a string, in which case it must be a path
+            to a CA bundle to use. Defaults to ``True``.
+    :param stream: (optional) if ``False``, the response content will be immediately downloaded.
+    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, (&#39;cert&#39;, &#39;key&#39;) pair.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)
+      &gt;&gt;&gt; req
+      &lt;Response [200]&gt;
+    &quot;&quot;&quot;
+
+    # By using the &#39;with&#39; statement we are sure the session is closed, thus we
+    # avoid leaving sockets open which can trigger a ResourceWarning in some
+    # cases, and look like a memory leak in others.
+    with sessions.Session() as session:
+        return session.request(method=method, url=url, **kwargs)
+
+
+def get(
+    url: _t.UriType, params: _t.ParamsType = None, **kwargs: Unpack[_t.GetKwargs]
+) -&gt; Response:
+    r&quot;&quot;&quot;Sends a GET request.
+
+    :param url: URL for the new :class:`Request` object.
+    :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the :class:`Request`.
+    :param \*\*kwargs: Optional arguments that ``request`` takes.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    return request(&quot;get&quot;, url, params=params, **kwargs)
+
+
+def options(url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]) -&gt; Response:
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    return request(&quot;get&quot;, url, params=params, **kwargs)
+
+
+def options(url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]) -&gt; Response:
+    r&quot;&quot;&quot;Sends an OPTIONS request.
+
+    :param url: URL for the new :class:`Request` object.
+    :param \*\*kwargs: Optional arguments that ``request`` takes.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    return request(&quot;options&quot;, url, **kwargs)
+
+
+def head(url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]) -&gt; Response:
+    r&quot;&quot;&quot;Sends a HEAD request.
+
+    :param url: URL for the new :class:`Request` object.
+    :param \*\*kwargs: Optional arguments that ``request`` takes. If
+        `allow_redirects` is not provided, it will be set to `False` (as
+        opposed to the default :meth:`request` behavior).
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    kwargs.setdefault(&quot;allow_redirects&quot;, False)
+    return request(&quot;head&quot;, url, **kwargs)
+
+
+def post(
+    url: _t.UriType,
+    data: _t.DataType = None,
+    json: _t.JsonType = None,</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">readme-install</span> 官方 README：安装与基础用法
+          <span class="src-lines">L1-77</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md</div>
+        <pre class="src-text"># Requests
+
+[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)
+[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)
+[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)
+[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)
+
+**Requests** is a simple, yet elegant, HTTP library.
+
+```python
+&gt;&gt;&gt; import requests
+&gt;&gt;&gt; r = requests.get(&#39;https://httpbin.org/basic-auth/user/pass&#39;, auth=(&#39;user&#39;, &#39;pass&#39;))
+&gt;&gt;&gt; r.status_code
+200
+&gt;&gt;&gt; r.headers[&#39;content-type&#39;]
+&#39;application/json; charset=utf8&#39;
+&gt;&gt;&gt; r.encoding
+&#39;utf-8&#39;
+&gt;&gt;&gt; r.text
+&#39;{&quot;authenticated&quot;: true, ...&#39;
+&gt;&gt;&gt; r.json()
+{&#39;authenticated&#39;: True, ...}
+```
+
+Requests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` &amp; `POST` data — but nowadays, just use the `json` method!
+
+Requests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.
+
+## Installing Requests and Supported Versions
+
+Requests is available on PyPI:
+
+```console
+$ python -m pip install requests
+```
+
+Requests officially supports Python 3.10+.
+
+## Supported Features &amp; Best–Practices
+
+Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
+
+- Keep-Alive &amp; Connection Pooling
+- International Domains and URLs
+- Sessions with Cookie Persistence
+- Browser-style TLS/SSL Verification
+- Basic &amp; Digest Authentication
+- Familiar `dict`–like Cookies
+- Automatic Content Decompression and Decoding
+- Multi-part File Uploads
+- SOCKS Proxy Support
+- Connection Timeouts
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+fetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit timestamp (see
+[this issue](https://github.com/psf/requests/issues/2690) for more background):
+
+```shell
+git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git
+```
+
+You can also apply this setting to your global Git config:
+
+```shell
+git config --global fetch.fsck.badTimezone ignore
+```
+
+---
+
+[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)
+</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">dev-contributing</span> 开发者贡献文档
+          <span class="src-lines">L74-166</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst</div>
+        <pre class="src-text">   document: :ref:`bug-reports`.
+3. Write tests that demonstrate your bug or feature. Ensure that they fail.
+4. Make your change.
+5. Run the entire test suite again, confirming that all tests pass *including
+   the ones you just added*.
+6. Send a GitHub Pull Request to the main repository&#39;s ``main`` branch.
+   GitHub Pull Requests are the expected method of code collaboration on this
+   project.
+
+The following sub-sections go into more detail on some of the points above.
+
+Code Review
+~~~~~~~~~~~
+
+Contributions will not be merged until they&#39;ve been code reviewed. You should
+implement any code review feedback unless you strongly object to it. In the
+event that you object to the code review feedback, you should make your case
+clearly and calmly. If, after doing so, the feedback is judged to still apply,
+you must either apply the feedback or withdraw your contribution.
+
+Code Style
+~~~~~~~~~~
+
+Requests uses a collection of tools to ensure the code base has a consistent
+style as it grows. We have these orchestrated using a tool called
+`pre-commit`_. This can be installed locally and run over your changes prior
+style as it grows. We have these orchestrated using a tool called
+`pre-commit`_. This can be installed locally and run over your changes prior
+to opening a PR, and will also be run as part of the CI approval process
+before a change is merged.
+
+You can find the full list of formatting requirements specified in the
+`.pre-commit-config.yaml`_ at the top level directory of Requests.
+
+.. _pre-commit: https://pre-commit.com/
+.. _.pre-commit-config.yaml: https://github.com/psf/requests/blob/main/.pre-commit-config.yaml
+
+New Contributors
+~~~~~~~~~~~~~~~~
+
+If you are new or relatively new to Open Source, welcome! Requests aims to
+be a gentle introduction to the world of Open Source. If you&#39;re concerned about
+how best to contribute, please consider mailing a maintainer (listed above) and
+asking for help.
+
+Please also check the :ref:`early-feedback` section.
+
+
+Documentation Contributions
+---------------------------
+
+Documentation improvements are always welcome! The documentation files live in
+the ``docs/`` directory of the codebase. They&#39;re written in
+`reStructuredText`_, and use `Sphinx`_ to generate the full suite of
+the ``docs/`` directory of the codebase. They&#39;re written in
+`reStructuredText`_, and use `Sphinx`_ to generate the full suite of
+documentation.
+
+When contributing documentation, please do your best to follow the style of the
+documentation files. This means a soft-limit of 79 characters wide in your text
+files and a semi-formal, yet friendly and approachable, prose style.
+
+When presenting Python code, use single-quoted strings (``&#39;hello&#39;`` instead of
+``&quot;hello&quot;``).
+
+.. _reStructuredText: https://docutils.sourceforge.net/rst.html
+.. _Sphinx: https://www.sphinx-doc.org/en/master/
+
+
+.. _bug-reports:
+
+Bug Reports
+-----------
+
+Bug reports are hugely important! Before you raise one, though, please check
+through the `GitHub issues`_, **both open and closed**, to confirm that the bug
+hasn&#39;t been reported before. Duplicate bug reports are a huge drain on the time
+of other contributors, and should be avoided as much as possible.
+
+.. _GitHub issues: https://github.com/psf/requests/issues
+
+
+Feature Requests
+----------------
+
+Requests is in a perpetual feature freeze, only the BDFL can add or approve of
+
+.. _GitHub issues: https://github.com/psf/requests/issues
+
+
+Feature Requests
+----------------
+
+Requests is in a perpetual feature freeze, only the BDFL can add or approve of
+new features. The maintainers believe that Requests is a feature-complete
+piece of software at this time.
+
+One of the most important skills to have while maintaining a largely-used
+open source project is learning the ability to say &quot;no&quot; to suggested changes,
+while keeping an open ear and mind.
+
+If you believe there is a feature missing, feel free to raise a feature
+request, but please do be aware that the overwhelming likelihood is that your
+feature request will not be accepted.
+</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="1">
+      <div class="q-head">
+        <h2>贡献代码前要做哪些准备？</h2>
+        <div class="q-meta">B02 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 9.7s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 2</span>
+        <span class="chip paraphrase">改写 4</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 6</span>
+        
+        <span class="chip ok">可照抄 2</span>
+      </div>
+        <div class="answer-text"><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">贡献代码前需做以下准备：<sup>语义改写</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：fork">Fork 仓库至个人GitHub账户；<sup>有据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">运行本地测试确保通过；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">编写演示已知问题或新功能的测试用例，并保证测试失败；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">提交更改后重新运行全部测试，验证新增内容无误；<sup>语义改写</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">发送Pull Request到主分支。<sup>有据</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">在贡献代码之前，通常需要完成以下准备工作：
+
+1. **了解项目和库的背景**：阅读项目的文档、README 文件以及相关的说明，理解其功能、目标和技术栈。
+
+2. **熟悉开发环境**：确保你已经安装了必要的依赖项，并且能够运行项目所需的工具（如 Python 环境）。
+
+3. **查看现有代码和提交历史**：通过 Git 或其他版本控制系统检查当前代码的状态，包括最近的更改记录，以了解项目的发展方向。
+
+4. **学习相关编程语言和框架**：如果你是为某个特定的技术栈或语言（例如 Python）做出贡献，应掌握该语言的基础知识及常用库。
+
+5. **遵循编码规范**：大多数开源项目都有自己的编码标准和风格指南，遵守这些规则有助于提高代码质量并减少潜在冲突。
+
+6. **参与社区讨论**：关注该项目的 GitHub 页面或其他平台上的讨论区，了解团队成员的想法和需求，这可以帮助你更好地定位你的贡献点。
+
+7. **确认权限与流程**：有些项目可能有明确的贡献者协议或审查流程，你需要了解如何申请加入或者提交变更请求。
+
+8. **测试用例和集成验证**：如果涉及新功能或修改，准备好相应的单元测试和集成测试来验证改动的有效性。
+
+9. **获取反馈**：在提交任何代码之前，最好先向维护者询问是否可以进行此类贡献，避免不必要的误解或拒绝。
+
+以上步骤能帮助你在正式开始贡献之前做好充分准备。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">dev-contributing</span> 开发者贡献文档
+          <span class="src-lines">L23-99</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst</div>
+        <pre class="src-text">contributors.
+
+Code of Conduct
+---------------
+
+The Python community is made up of members from around the globe with a diverse
+set of skills, personalities, and experiences. It is through these differences
+that our community experiences great successes and continued growth. When you&#39;re
+working with members of the community, follow the
+`Python Software Foundation Code of Conduct`_ to help steer your interactions
+and keep Python a positive, successful, and growing community.
+
+.. _Python Software Foundation Code of Conduct: https://policies.python.org/python.org/code-of-conduct/
+
+.. _early-feedback:
+
+Get Early Feedback
+------------------
+
+If you are contributing, do not feel the need to sit on your contribution until
+it is perfectly polished and complete. It helps everyone involved for you to
+seek feedback as early as you possibly can. Submitting an early, unfinished
+version of your contribution for feedback in no way prejudices your chances of
+getting that contribution accepted, and can save you from putting a lot of work
+into a contribution that is not suitable for the project.
+
+Contribution Suitability
+getting that contribution accepted, and can save you from putting a lot of work
+into a contribution that is not suitable for the project.
+
+Contribution Suitability
+------------------------
+
+Our project maintainers have the last word on whether or not a contribution is
+suitable for Requests. All contributions will be considered carefully, but from
+time to time, contributions will be rejected because they do not suit the
+current goals or needs of the project.
+
+If your contribution is rejected, don&#39;t despair! As long as you followed these
+guidelines, you will have a much better chance of getting your next
+contribution accepted.
+
+
+Code Contributions
+------------------
+
+Steps for Submitting Code
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When contributing code, you&#39;ll want to follow this checklist:
+
+1. Fork the repository on GitHub.
+2. Run the tests to confirm they all pass on your system. If they don&#39;t, you&#39;ll
+   need to investigate why they fail. If you&#39;re unable to diagnose this
+   yourself, raise it as a bug report by following the guidelines in this
+   document: :ref:`bug-reports`.
+3. Write tests that demonstrate your bug or feature. Ensure that they fail.
+   document: :ref:`bug-reports`.
+3. Write tests that demonstrate your bug or feature. Ensure that they fail.
+4. Make your change.
+5. Run the entire test suite again, confirming that all tests pass *including
+   the ones you just added*.
+6. Send a GitHub Pull Request to the main repository&#39;s ``main`` branch.
+   GitHub Pull Requests are the expected method of code collaboration on this
+   project.
+
+The following sub-sections go into more detail on some of the points above.
+
+Code Review
+~~~~~~~~~~~
+
+Contributions will not be merged until they&#39;ve been code reviewed. You should
+implement any code review feedback unless you strongly object to it. In the
+event that you object to the code review feedback, you should make your case
+clearly and calmly. If, after doing so, the feedback is judged to still apply,
+you must either apply the feedback or withdraw your contribution.
+
+Code Style
+~~~~~~~~~~
+
+Requests uses a collection of tools to ensure the code base has a consistent
+style as it grows. We have these orchestrated using a tool called
+`pre-commit`_. This can be installed locally and run over your changes prior</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">contributing</span> 官方贡献指南
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md</div>
+        <pre class="src-text"># Contribution Guidelines
+
+Before opening any issues or proposing any pull requests, please read
+our [Contributor&#39;s Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)
+as well as our [AI Policy](/.github/AI_POLICY.md).
+
+To get the greatest chance of helpful responses, please also observe the
+following additional notes.
+
+## Questions
+
+The GitHub issue tracker is for *bug reports* and *feature requests*. Please do
+not use it to ask questions about how to use Requests. These questions should
+instead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure
+that your question is tagged with the `python-requests` tag when asking it on
+Stack Overflow, to ensure that it is answered promptly and accurately.
+
+## Good Bug Reports
+
+Please be aware of the following things when filing bug reports:
+
+1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature
+   to check whether your bug report or feature request has been mentioned in
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   report that you would have struggled to find the original, that&#39;s ok, but
+   if searching for a selection of words in your issue title would have found
+   the duplicate then the issue will likely be closed extremely abruptly.
+2. When filing bug reports about exceptions or tracebacks, please include the
+   *complete* traceback. Partial tracebacks, or just the exception text, are
+   not helpful. Issues that do not contain complete tracebacks may be closed
+   without warning.
+3. Make sure you provide a suitable amount of information to work with. This
+   means you should provide:
+
+   - Guidance on **how to reproduce the issue**. Ideally, this should be a
+     *small* code sample that can be run immediately by the maintainers.
+     Failing that, let us know what you&#39;re doing, how often it happens, what
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     what are we expecting to happen? What does &quot;success&quot; look like for your
+     code?
+   - Tell us **what actually happens**. It&#39;s not helpful for you to say &quot;it
+     doesn&#39;t work&quot; or &quot;it fails&quot;. Tell us *how* it fails: do you get an
+     exception? A hang? A non-200 status code? How was the actual result
+     different from your expected result?
+   - Tell us **what version of Requests you&#39;re using**, and
+     **how you installed it**. Different versions of Requests behave
+     differently and have different bugs, and some distributors of Requests
+     ship patches on top of the code we supply.
+
+   If you do not provide all of these things, it will take us much longer to
+   fix your problem. If we ask you to clarify these and you never respond, we
+   will close your issue without fixing it.
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+   request.
+2. When filing a pull request, always include tests that fail without your
+   changes thus preventing the fix from regressing.
+3. Always run the test suite locally
+4. Write commit messages that explain _why_ a change was made beyond &quot;Fixes
+   #NNNN&quot;. Why is this the right fix? What other options were ruled out? etc.
+</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">security</span> 官方安全政策
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md</div>
+        <pre class="src-text"># Vulnerability Disclosure
+
+If you think you have found a potential security vulnerability in
+requests, please open a [draft Security Advisory](https://github.com/psf/requests/security/advisories/new)
+via GitHub. We will coordinate verification and next steps through
+that secure medium.
+
+If English is not your first language, please try to describe the
+problem and its impact to the best of your ability. For greater detail,
+please use your native language and we will try our best to translate it
+using online services.
+
+Please also include the code you used to find the problem and the
+shortest amount of code necessary to reproduce it.
+
+Please do not disclose this to anyone else. We will retrieve a CVE
+identifier if necessary and give you full credit under whatever name or
+alias you provide. We will only request an identifier when we have a fix
+and can publish it in a release.
+
+We will respect your privacy and will only publicize your involvement if
+you grant us permission.
+
+## Process
+
+This following information discusses the process the requests project
+follows in response to vulnerability disclosures. If you are disclosing
+you grant us permission.
+
+## Process
+
+This following information discusses the process the requests project
+follows in response to vulnerability disclosures. If you are disclosing
+a vulnerability, this section of the documentation lets you know how we
+will respond to your disclosure.
+
+### Timeline
+
+When you report an issue, one of the project members will respond to you
+within two days *at the outside*. In most cases responses will be
+faster, usually within 12 hours. This initial response will at the very
+least confirm receipt of the report.
+
+If we were able to rapidly reproduce the issue, the initial response
+will also contain confirmation of the issue. If we are not, we will
+often ask for more information about the reproduction scenario.
+
+Our goal is to have a fix for any vulnerability released within two
+weeks of the initial disclosure. This may potentially involve shipping
+an interim release that simply disables function while a more mature fix
+can be prepared, but will in the vast majority of cases mean shipping a
+complete release as soon as possible.
+
+Throughout the fix process we will keep you up to speed with how the fix
+complete release as soon as possible.
+
+Throughout the fix process we will keep you up to speed with how the fix
+is progressing. Once the fix is prepared, we will notify you that we
+believe we have a fix. Often we will ask you to confirm the fix resolves
+the problem in your environment, especially if we are not confident of
+our reproduction scenario.
+
+At this point, we will prepare for the release. We will obtain a CVE
+number if one is required, providing you with full credit for the
+discovery. We will also decide on a planned release date, and let you
+know when it is. This release date will *always* be on a weekday.
+
+At this point we will reach out to our major downstream packagers to
+notify them of an impending security-related patch so they can make
+arrangements. In addition, these packagers will be provided with the
+intended patch ahead of time, to ensure that they are able to promptly
+release their downstream packages. Currently the list of people we
+actively contact *ahead of a public release* is:
+
+-   Python Maintenance Team, Red Hat (python-maint@redhat.com)
+-   Daniele Tricoli, Debian (@eriol)</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="2">
+      <div class="q-head">
+        <h2>Requests 用什么许可证，再分发要注意什么？</h2>
+        <div class="q-meta">B03 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 18.3s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 2</span>
+        <span class="chip paraphrase">改写 4</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 6</span>
+        
+        <span class="chip ok">可照抄 2</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded" title="关键英文术语出现在证据中：apache">Requests 使用 Apache License 2.0 协议，原文见 LICENSE 文件。<sup>有据</sup></span><span class="claim neutral" title="建议性表述，不计入事实核验">再分发时须遵守以下条件：<sup>建议</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">(a) 必须将本许可协议副本发送给所有接收者；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">(b) 若修改了源码，则应显著注明修改内容；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">(c) 在源形式衍生作品中保留原始作品的所有版权、专利、商标及署名通知，除非这些通知不适用于衍生作品的部分；<sup>语义改写</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：notice">(d) 如源码中包含名为 &quot;NOTICE&quot; 的文本文件，则衍生作品也必须包含该文件中所含的署名信息，且至少在一个位置内呈现，包括但不限于通过发布文件、文档或生成的显示中；<sup>有据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">(e) 用户可以添加自己的版权声明，并可为修改后的代码设定不同的使用、复制或分发许可条款。<sup>语义改写</sup></span><span class="claim neutral" title="对证据充分性的说明，不计入">证据中未说明。<sup>说明</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">Requests 使用的是 MIT 许可证。在再分发时，需要遵守该许可证的条款，通常意味着你可以自由地使用、修改和重新分发代码，但必须保留原始的版权声明和许可声明，并且不得将源码用于商业用途而未获得授权。具体细节应参考官方文档或许可证文件以确保合规性。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">license</span> 官方 LICENSE
+          <span class="src-lines">L1-126</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/LICENSE</div>
+        <pre class="src-text">
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+……（中间定义条款略，以下为与“再分发/分发”相关的条款）……
+
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">api-code</span> src/requests/api.py：API 实现
+          <span class="src-lines">L1-62</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py</div>
+        <pre class="src-text">&quot;&quot;&quot;
+requests.api
+~~~~~~~~~~~~
+
+This module implements the Requests API.
+
+:copyright: (c) 2012 by Kenneth Reitz.
+:license: Apache2, see LICENSE for more details.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from . import sessions
+from .models import Response
+
+if TYPE_CHECKING:
+    from typing_extensions import Unpack
+
+    from . import _types as _t
+
+
+def request(
+    method: str, url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]
+) -&gt; Response:
+    &quot;&quot;&quot;Constructs and sends a :class:`Request &lt;Request&gt;`.
+
+    :param method: method for the new :class:`Request` object: ``GET``, ``OPTIONS``, ``HEAD``, ``POST``, ``PUT``, ``PATCH``, or ``DELETE``.
+    :param url: URL for the new :class:`Request` object.
+    :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the :class:`Request`.
+    :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+        object to send in the body of the :class:`Request`.
+    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.
+        object to send in the body of the :class:`Request`.
+    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.
+    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.
+    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.
+    :param files: (optional) Dictionary of ``&#39;name&#39;: file-like-objects`` (or ``{&#39;name&#39;: file-tuple}``) for multipart encoding upload.
+        ``file-tuple`` can be a 2-tuple ``(&#39;filename&#39;, fileobj)``, 3-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;)``
+        or a 4-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;, custom_headers)``, where ``&#39;content_type&#39;`` is a string
+        defining the content type of the given file and ``custom_headers`` a dict-like object containing additional headers
+        to add for the file.
+    :param auth: (optional) Auth tuple to enable Basic/Digest/Custom HTTP Auth.
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+        timeout) &lt;timeouts&gt;` tuple.
+    :type timeout: float or tuple
+    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.
+    :type allow_redirects: bool
+    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
+    :param verify: (optional) Either a boolean, in which case it controls whether we verify
+            the server&#39;s TLS certificate, or a string, in which case it must be a path
+            to a CA bundle to use. Defaults to ``True``.
+    :param stream: (optional) if ``False``, the response content will be immediately downloaded.
+    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, (&#39;cert&#39;, &#39;key&#39;) pair.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">readme-install</span> 官方 README：安装与基础用法
+          <span class="src-lines">L1-77</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md</div>
+        <pre class="src-text"># Requests
+
+[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)
+[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)
+[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)
+[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)
+
+**Requests** is a simple, yet elegant, HTTP library.
+
+```python
+&gt;&gt;&gt; import requests
+&gt;&gt;&gt; r = requests.get(&#39;https://httpbin.org/basic-auth/user/pass&#39;, auth=(&#39;user&#39;, &#39;pass&#39;))
+&gt;&gt;&gt; r.status_code
+200
+&gt;&gt;&gt; r.headers[&#39;content-type&#39;]
+&#39;application/json; charset=utf8&#39;
+&gt;&gt;&gt; r.encoding
+&#39;utf-8&#39;
+&gt;&gt;&gt; r.text
+&#39;{&quot;authenticated&quot;: true, ...&#39;
+&gt;&gt;&gt; r.json()
+{&#39;authenticated&#39;: True, ...}
+```
+
+Requests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` &amp; `POST` data — but nowadays, just use the `json` method!
+
+Requests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.
+
+## Installing Requests and Supported Versions
+
+Requests is available on PyPI:
+
+```console
+$ python -m pip install requests
+```
+
+Requests officially supports Python 3.10+.
+
+## Supported Features &amp; Best–Practices
+
+Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
+
+- Keep-Alive &amp; Connection Pooling
+- International Domains and URLs
+- Sessions with Cookie Persistence
+- Browser-style TLS/SSL Verification
+- Basic &amp; Digest Authentication
+- Familiar `dict`–like Cookies
+- Automatic Content Decompression and Decoding
+- Multi-part File Uploads
+- SOCKS Proxy Support
+- Connection Timeouts
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+fetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit timestamp (see
+[this issue](https://github.com/psf/requests/issues/2690) for more background):
+
+```shell
+git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git
+```
+
+You can also apply this setting to your global Git config:
+
+```shell
+git config --global fetch.fsck.badTimezone ignore
+```
+
+---
+
+[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)
+</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="3">
+      <div class="q-head">
+        <h2>我想报告一个安全漏洞，应该怎么做？</h2>
+        <div class="q-meta">B04 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 10.7s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 1</span>
+        <span class="chip paraphrase">改写 5</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 6</span>
+        <span class="chip danger">格式 1</span>
+        <span class="chip ok">可照抄 0</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded format-error" title="关键英文术语出现在证据中：draft、security、advisory · 格式：https:/github.com/psf/request/security/advisories/new">应通过 GitHub 创建草稿安全通告（[draft Security Advisory](https:/github.com/psf/request/security/advisories/new)），包括：<span class="claim-format">格式</span><sup>有据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">发现代码（用于验证问题）；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">最短复现代码（必要时提交）；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">问题描述与影响分析（尽量详细，非英语者可用母语描述）；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">遵守隐私原则，禁止向第三方透露；<sup>语义改写</sup></span><span class="claim neutral" title="建议性表述，不计入事实核验">若有CVE标识，将获得信用。<sup>建议</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">所有内容须在官方文档中指定流程下进行，并确保在两个工作日内收到回应。<sup>语义改写</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">如果您发现任何安全漏洞，请立即联系相关软件或服务的维护团队，并按照其提供的指导进行报告。通常，这包括通过官方渠道提交漏洞报告，例如访问官方网站上的“安全公告”、“漏洞赏金计划”或直接联系技术支持人员。在报告时，请确保提供尽可能详细的信息，如漏洞描述、复现步骤、影响范围以及您尝试使用的版本等。此外，遵循组织的安全政策和程序是至关重要的。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">security</span> 官方安全政策
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md</div>
+        <pre class="src-text"># Vulnerability Disclosure
+
+If you think you have found a potential security vulnerability in
+requests, please open a [draft Security Advisory](https://github.com/psf/requests/security/advisories/new)
+via GitHub. We will coordinate verification and next steps through
+that secure medium.
+
+If English is not your first language, please try to describe the
+problem and its impact to the best of your ability. For greater detail,
+please use your native language and we will try our best to translate it
+using online services.
+
+Please also include the code you used to find the problem and the
+shortest amount of code necessary to reproduce it.
+
+Please do not disclose this to anyone else. We will retrieve a CVE
+identifier if necessary and give you full credit under whatever name or
+alias you provide. We will only request an identifier when we have a fix
+and can publish it in a release.
+
+We will respect your privacy and will only publicize your involvement if
+you grant us permission.
+
+## Process
+
+This following information discusses the process the requests project
+follows in response to vulnerability disclosures. If you are disclosing
+you grant us permission.
+
+## Process
+
+This following information discusses the process the requests project
+follows in response to vulnerability disclosures. If you are disclosing
+a vulnerability, this section of the documentation lets you know how we
+will respond to your disclosure.
+
+### Timeline
+
+When you report an issue, one of the project members will respond to you
+within two days *at the outside*. In most cases responses will be
+faster, usually within 12 hours. This initial response will at the very
+least confirm receipt of the report.
+
+If we were able to rapidly reproduce the issue, the initial response
+will also contain confirmation of the issue. If we are not, we will
+often ask for more information about the reproduction scenario.
+
+Our goal is to have a fix for any vulnerability released within two
+weeks of the initial disclosure. This may potentially involve shipping
+an interim release that simply disables function while a more mature fix
+can be prepared, but will in the vast majority of cases mean shipping a
+complete release as soon as possible.
+
+Throughout the fix process we will keep you up to speed with how the fix
+complete release as soon as possible.
+
+Throughout the fix process we will keep you up to speed with how the fix
+is progressing. Once the fix is prepared, we will notify you that we
+believe we have a fix. Often we will ask you to confirm the fix resolves
+the problem in your environment, especially if we are not confident of
+our reproduction scenario.
+
+At this point, we will prepare for the release. We will obtain a CVE
+number if one is required, providing you with full credit for the
+discovery. We will also decide on a planned release date, and let you
+know when it is. This release date will *always* be on a weekday.
+
+At this point we will reach out to our major downstream packagers to
+notify them of an impending security-related patch so they can make
+arrangements. In addition, these packagers will be provided with the
+intended patch ahead of time, to ensure that they are able to promptly
+release their downstream packages. Currently the list of people we
+actively contact *ahead of a public release* is:
+
+-   Python Maintenance Team, Red Hat (python-maint@redhat.com)
+-   Daniele Tricoli, Debian (@eriol)</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="4">
+      <div class="q-head">
+        <h2>怎么安装并发起一个 GET 请求？</h2>
+        <div class="q-meta">B05 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 15.1s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 15</span>
+        <span class="chip paraphrase">改写 0</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 15</span>
+        <span class="chip danger">格式 2</span>
+        <span class="chip ok">可照抄 13</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded" title="与证据片段的用词高度重合">安装 Requests 需要运行以下命令：<sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">```bash<sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">$ python -mpip install requests<sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">```<sup>有据</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：requests.get">发起一个 GET 请求可以使用 `requests.get()` 方法，传入目标 URL 和可选参数，例如：<sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">```python<sup>有据</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：import">import requests<sup>有据</sup></span><span class="claim grounded format-error" title="关键英文术语出现在证据中：requests.get、httpbin.org · 格式：https//httpbin.org/get">r = requests.get(&#39;https//httpbin.org/get&#39;)<span class="claim-format">格式</span><sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">print(r.status_code)<sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">```<sup>有据</sup></span><span class="claim grounded" title="引用标识可在证据中找到：params">请求参数可通过 `params` 参数传递，如：<sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">```python<sup>有据</sup></span><span class="claim grounded format-error" title="关键英文术语出现在证据中：requests.get、httpbin.org、params · 格式：https://httpbin.org/delay">r = requests.get(&quot;https://httpbin.org/delay&quot;, params={&quot;delay&quot;: 1})<span class="claim-format">格式</span><sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">```<sup>有据</sup></span><span class="claim grounded" title="引用标识可在证据中找到：Response">返回结果是一个 `Response` 对象，可用于获取状态码、头信息和内容。<sup>有据</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">要安装 Requests HTTP 库，可以使用 pip 命令：
+
+```bash
+pip install requests
+```
+
+然后，你可以通过以下代码发起一个 GET 请求：
+
+```python
+import requests
+
+# 发起GET请求
+response = requests.get(&#39;https://httpbin.org/get&#39;)
+
+# 打印响应内容
+print(response.text)
+```
+
+注意：在实际操作中，请确保你已正确安装了 `requests` 库，并且你的 Python 环境支持该库的运行。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">readme-install</span> 官方 README：安装与基础用法
+          <span class="src-lines">L1-77</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md</div>
+        <pre class="src-text"># Requests
+
+[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)
+[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)
+[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)
+[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)
+
+**Requests** is a simple, yet elegant, HTTP library.
+
+```python
+&gt;&gt;&gt; import requests
+&gt;&gt;&gt; r = requests.get(&#39;https://httpbin.org/basic-auth/user/pass&#39;, auth=(&#39;user&#39;, &#39;pass&#39;))
+&gt;&gt;&gt; r.status_code
+200
+&gt;&gt;&gt; r.headers[&#39;content-type&#39;]
+&#39;application/json; charset=utf8&#39;
+&gt;&gt;&gt; r.encoding
+&#39;utf-8&#39;
+&gt;&gt;&gt; r.text
+&#39;{&quot;authenticated&quot;: true, ...&#39;
+&gt;&gt;&gt; r.json()
+{&#39;authenticated&#39;: True, ...}
+```
+
+Requests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` &amp; `POST` data — but nowadays, just use the `json` method!
+
+Requests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.
+
+## Installing Requests and Supported Versions
+
+Requests is available on PyPI:
+
+```console
+$ python -m pip install requests
+```
+
+Requests officially supports Python 3.10+.
+
+## Supported Features &amp; Best–Practices
+
+Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
+
+- Keep-Alive &amp; Connection Pooling
+- International Domains and URLs
+- Sessions with Cookie Persistence
+- Browser-style TLS/SSL Verification
+- Basic &amp; Digest Authentication
+- Familiar `dict`–like Cookies
+- Automatic Content Decompression and Decoding
+- Multi-part File Uploads
+- SOCKS Proxy Support
+- Connection Timeouts
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+fetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit timestamp (see
+[this issue](https://github.com/psf/requests/issues/2690) for more background):
+
+```shell
+git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git
+```
+
+You can also apply this setting to your global Git config:
+
+```shell
+git config --global fetch.fsck.badTimezone ignore
+```
+
+---
+
+[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)
+</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">api-code</span> src/requests/api.py：API 实现
+          <span class="src-lines">L44-120</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py</div>
+        <pre class="src-text">    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+        timeout) &lt;timeouts&gt;` tuple.
+    :type timeout: float or tuple
+    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.
+    :type allow_redirects: bool
+    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
+    :param verify: (optional) Either a boolean, in which case it controls whether we verify
+            the server&#39;s TLS certificate, or a string, in which case it must be a path
+            to a CA bundle to use. Defaults to ``True``.
+    :param stream: (optional) if ``False``, the response content will be immediately downloaded.
+    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, (&#39;cert&#39;, &#39;key&#39;) pair.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)
+      &gt;&gt;&gt; req
+      &lt;Response [200]&gt;
+    &quot;&quot;&quot;
+
+    # By using the &#39;with&#39; statement we are sure the session is closed, thus we
+    # avoid leaving sockets open which can trigger a ResourceWarning in some
+    # cases, and look like a memory leak in others.
+    with sessions.Session() as session:
+        return session.request(method=method, url=url, **kwargs)
+
+
+def get(
+    url: _t.UriType, params: _t.ParamsType = None, **kwargs: Unpack[_t.GetKwargs]
+) -&gt; Response:
+    r&quot;&quot;&quot;Sends a GET request.
+
+    :param url: URL for the new :class:`Request` object.
+    :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the :class:`Request`.
+    :param \*\*kwargs: Optional arguments that ``request`` takes.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    return request(&quot;get&quot;, url, params=params, **kwargs)
+
+
+def options(url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]) -&gt; Response:
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    return request(&quot;get&quot;, url, params=params, **kwargs)
+
+
+def options(url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]) -&gt; Response:
+    r&quot;&quot;&quot;Sends an OPTIONS request.
+
+    :param url: URL for the new :class:`Request` object.
+    :param \*\*kwargs: Optional arguments that ``request`` takes.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    return request(&quot;options&quot;, url, **kwargs)
+
+
+def head(url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]) -&gt; Response:
+    r&quot;&quot;&quot;Sends a HEAD request.
+
+    :param url: URL for the new :class:`Request` object.
+    :param \*\*kwargs: Optional arguments that ``request`` takes. If
+        `allow_redirects` is not provided, it will be set to `False` (as
+        opposed to the default :meth:`request` behavior).
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    kwargs.setdefault(&quot;allow_redirects&quot;, False)
+    return request(&quot;head&quot;, url, **kwargs)
+
+
+def post(
+    url: _t.UriType,
+    data: _t.DataType = None,
+    json: _t.JsonType = None,</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">contributing</span> 官方贡献指南
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md</div>
+        <pre class="src-text"># Contribution Guidelines
+
+Before opening any issues or proposing any pull requests, please read
+our [Contributor&#39;s Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)
+as well as our [AI Policy](/.github/AI_POLICY.md).
+
+To get the greatest chance of helpful responses, please also observe the
+following additional notes.
+
+## Questions
+
+The GitHub issue tracker is for *bug reports* and *feature requests*. Please do
+not use it to ask questions about how to use Requests. These questions should
+instead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure
+that your question is tagged with the `python-requests` tag when asking it on
+Stack Overflow, to ensure that it is answered promptly and accurately.
+
+## Good Bug Reports
+
+Please be aware of the following things when filing bug reports:
+
+1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature
+   to check whether your bug report or feature request has been mentioned in
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   report that you would have struggled to find the original, that&#39;s ok, but
+   if searching for a selection of words in your issue title would have found
+   the duplicate then the issue will likely be closed extremely abruptly.
+2. When filing bug reports about exceptions or tracebacks, please include the
+   *complete* traceback. Partial tracebacks, or just the exception text, are
+   not helpful. Issues that do not contain complete tracebacks may be closed
+   without warning.
+3. Make sure you provide a suitable amount of information to work with. This
+   means you should provide:
+
+   - Guidance on **how to reproduce the issue**. Ideally, this should be a
+     *small* code sample that can be run immediately by the maintainers.
+     Failing that, let us know what you&#39;re doing, how often it happens, what
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     what are we expecting to happen? What does &quot;success&quot; look like for your
+     code?
+   - Tell us **what actually happens**. It&#39;s not helpful for you to say &quot;it
+     doesn&#39;t work&quot; or &quot;it fails&quot;. Tell us *how* it fails: do you get an
+     exception? A hang? A non-200 status code? How was the actual result
+     different from your expected result?
+   - Tell us **what version of Requests you&#39;re using**, and
+     **how you installed it**. Different versions of Requests behave
+     differently and have different bugs, and some distributors of Requests
+     ship patches on top of the code we supply.
+
+   If you do not provide all of these things, it will take us much longer to
+   fix your problem. If we ask you to clarify these and you never respond, we
+   will close your issue without fixing it.
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+   request.
+2. When filing a pull request, always include tests that fail without your
+   changes thus preventing the fix from regressing.
+3. Always run the test suite locally
+4. Write commit messages that explain _why_ a change was made beyond &quot;Fixes
+   #NNNN&quot;. Why is this the right fix? What other options were ruled out? etc.
+</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="5">
+      <div class="q-head">
+        <h2>Requests 的测试文件在哪里？</h2>
+        <div class="q-meta">B06 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 10.1s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 1</span>
+        <span class="chip paraphrase">改写 1</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 2</span>
+        <span class="chip danger">格式 1</span>
+        <span class="chip ok">可照抄 0</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded format-error" title="引用标识可在证据中找到：tests/、test_requests.py · 格式：https://github.com/PSF/requests/blob/6.../tests/test_requests.py">Requests 的测试文件位于 `tests/` 目录下，主要文件为 `test_requests.py`，该文件在官方仓库中可通过 `https://github.com/PSF/requests/blob/6.../tests/test_requests.py` 访问。<span class="claim-format">格式</span><sup>有据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">此外，开发者的贡献文档也提到了测试的重要性，包括编写能够复现问题的测试用例，并确保所有测试通过。<sup>语义改写</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">Requests 的测试文件通常位于其源代码仓库中的 `tests/` 目录下。具体路径可能因版本而异，但一般在 `requests/tests/` 文件夹中可以找到相关的单元测试和集成测试文件。这些文件用于验证 Requests 库的功能和行为。要获取最新的测试文件位置，建议查看官方文档或 GitHub 页面上的 README 或其他说明。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">tests</span> 官方测试文件
+          <span class="src-lines">L1-53</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/tests/test_requests.py</div>
+        <pre class="src-text">&quot;&quot;&quot;Tests for Requests.&quot;&quot;&quot;
+
+import collections
+import contextlib
+import io
+import json
+import os
+import pickle
+import re
+import tempfile
+import threading
+import warnings
+from unittest import mock
+
+import pytest
+import urllib3
+from urllib3.util import Timeout as Urllib3Timeout
+
+import requests
+from requests.adapters import HTTPAdapter
+from requests.auth import HTTPDigestAuth, _basic_auth_str
+from requests.compat import (
+    JSONDecodeError,
+    Morsel,
+    MutableMapping,
+    builtin_str,
+    cookielib,
+    getproxies,
+    is_urllib3_1,
+    urlparse,
+)
+from requests.cookies import cookiejar_from_dict, morsel_to_cookie
+from requests.exceptions import (
+    ChunkedEncodingError,
+    ConnectionError,
+    ConnectTimeout,
+    ContentDecodingError,
+    InvalidHeader,
+    InvalidProxyURL,
+    InvalidSchema,
+    InvalidURL,
+    MissingSchema,
+    ProxyError,
+    ReadTimeout,
+    RequestException,
+    RetryError,
+    Timeout,
+    TooManyRedirects,
+    UnrewindableBodyError,
+)
+from requests.exceptions import SSLError as RequestsSSLError
+from requests.hooks import default_hooks
+from requests.models import PreparedRequest, urlencode</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">dev-contributing</span> 开发者贡献文档
+          <span class="src-lines">L46-125</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst</div>
+        <pre class="src-text">getting that contribution accepted, and can save you from putting a lot of work
+into a contribution that is not suitable for the project.
+
+Contribution Suitability
+------------------------
+
+Our project maintainers have the last word on whether or not a contribution is
+suitable for Requests. All contributions will be considered carefully, but from
+time to time, contributions will be rejected because they do not suit the
+current goals or needs of the project.
+
+If your contribution is rejected, don&#39;t despair! As long as you followed these
+guidelines, you will have a much better chance of getting your next
+contribution accepted.
+
+
+Code Contributions
+------------------
+
+Steps for Submitting Code
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When contributing code, you&#39;ll want to follow this checklist:
+
+1. Fork the repository on GitHub.
+2. Run the tests to confirm they all pass on your system. If they don&#39;t, you&#39;ll
+   need to investigate why they fail. If you&#39;re unable to diagnose this
+   yourself, raise it as a bug report by following the guidelines in this
+   document: :ref:`bug-reports`.
+3. Write tests that demonstrate your bug or feature. Ensure that they fail.
+   document: :ref:`bug-reports`.
+3. Write tests that demonstrate your bug or feature. Ensure that they fail.
+4. Make your change.
+5. Run the entire test suite again, confirming that all tests pass *including
+   the ones you just added*.
+6. Send a GitHub Pull Request to the main repository&#39;s ``main`` branch.
+   GitHub Pull Requests are the expected method of code collaboration on this
+   project.
+
+The following sub-sections go into more detail on some of the points above.
+
+Code Review
+~~~~~~~~~~~
+
+Contributions will not be merged until they&#39;ve been code reviewed. You should
+implement any code review feedback unless you strongly object to it. In the
+event that you object to the code review feedback, you should make your case
+clearly and calmly. If, after doing so, the feedback is judged to still apply,
+you must either apply the feedback or withdraw your contribution.
+
+Code Style
+~~~~~~~~~~
+
+Requests uses a collection of tools to ensure the code base has a consistent
+style as it grows. We have these orchestrated using a tool called
+`pre-commit`_. This can be installed locally and run over your changes prior
+style as it grows. We have these orchestrated using a tool called
+`pre-commit`_. This can be installed locally and run over your changes prior
+to opening a PR, and will also be run as part of the CI approval process
+before a change is merged.
+
+You can find the full list of formatting requirements specified in the
+`.pre-commit-config.yaml`_ at the top level directory of Requests.
+
+.. _pre-commit: https://pre-commit.com/
+.. _.pre-commit-config.yaml: https://github.com/psf/requests/blob/main/.pre-commit-config.yaml
+
+New Contributors
+~~~~~~~~~~~~~~~~
+
+If you are new or relatively new to Open Source, welcome! Requests aims to
+be a gentle introduction to the world of Open Source. If you&#39;re concerned about
+how best to contribute, please consider mailing a maintainer (listed above) and
+asking for help.
+
+Please also check the :ref:`early-feedback` section.
+
+
+Documentation Contributions
+---------------------------
+
+Documentation improvements are always welcome! The documentation files live in
+the ``docs/`` directory of the codebase. They&#39;re written in
+`reStructuredText`_, and use `Sphinx`_ to generate the full suite of</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">contributing</span> 官方贡献指南
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md</div>
+        <pre class="src-text"># Contribution Guidelines
+
+Before opening any issues or proposing any pull requests, please read
+our [Contributor&#39;s Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)
+as well as our [AI Policy](/.github/AI_POLICY.md).
+
+To get the greatest chance of helpful responses, please also observe the
+following additional notes.
+
+## Questions
+
+The GitHub issue tracker is for *bug reports* and *feature requests*. Please do
+not use it to ask questions about how to use Requests. These questions should
+instead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure
+that your question is tagged with the `python-requests` tag when asking it on
+Stack Overflow, to ensure that it is answered promptly and accurately.
+
+## Good Bug Reports
+
+Please be aware of the following things when filing bug reports:
+
+1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature
+   to check whether your bug report or feature request has been mentioned in
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   report that you would have struggled to find the original, that&#39;s ok, but
+   if searching for a selection of words in your issue title would have found
+   the duplicate then the issue will likely be closed extremely abruptly.
+2. When filing bug reports about exceptions or tracebacks, please include the
+   *complete* traceback. Partial tracebacks, or just the exception text, are
+   not helpful. Issues that do not contain complete tracebacks may be closed
+   without warning.
+3. Make sure you provide a suitable amount of information to work with. This
+   means you should provide:
+
+   - Guidance on **how to reproduce the issue**. Ideally, this should be a
+     *small* code sample that can be run immediately by the maintainers.
+     Failing that, let us know what you&#39;re doing, how often it happens, what
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     what are we expecting to happen? What does &quot;success&quot; look like for your
+     code?
+   - Tell us **what actually happens**. It&#39;s not helpful for you to say &quot;it
+     doesn&#39;t work&quot; or &quot;it fails&quot;. Tell us *how* it fails: do you get an
+     exception? A hang? A non-200 status code? How was the actual result
+     different from your expected result?
+   - Tell us **what version of Requests you&#39;re using**, and
+     **how you installed it**. Different versions of Requests behave
+     differently and have different bugs, and some distributors of Requests
+     ship patches on top of the code we supply.
+
+   If you do not provide all of these things, it will take us much longer to
+   fix your problem. If we ask you to clarify these and you never respond, we
+   will close your issue without fixing it.
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+   request.
+2. When filing a pull request, always include tests that fail without your
+   changes thus preventing the fix from regressing.
+3. Always run the test suite locally
+4. Write commit messages that explain _why_ a change was made beyond &quot;Fixes
+   #NNNN&quot;. Why is this the right fix? What other options were ruled out? etc.
+</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="6">
+      <div class="q-head">
+        <h2>Requests 支持哪些 Python 版本？</h2>
+        <div class="q-meta">B07 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 5.7s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 1</span>
+        <span class="chip paraphrase">改写 0</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 1</span>
+        
+        <span class="chip ok">可照抄 1</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded" title="关键英文术语出现在证据中：officially、supports">Requests officially supports Python 3.10+.<sup>有据</sup></span><span class="claim neutral" title="对证据充分性的说明，不计入">证据中未说明<sup>说明</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">Requests 支持 Python 3.4 及以上版本。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">readme-install</span> 官方 README：安装与基础用法
+          <span class="src-lines">L1-77</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md</div>
+        <pre class="src-text"># Requests
+
+[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)
+[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)
+[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)
+[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)
+
+**Requests** is a simple, yet elegant, HTTP library.
+
+```python
+&gt;&gt;&gt; import requests
+&gt;&gt;&gt; r = requests.get(&#39;https://httpbin.org/basic-auth/user/pass&#39;, auth=(&#39;user&#39;, &#39;pass&#39;))
+&gt;&gt;&gt; r.status_code
+200
+&gt;&gt;&gt; r.headers[&#39;content-type&#39;]
+&#39;application/json; charset=utf8&#39;
+&gt;&gt;&gt; r.encoding
+&#39;utf-8&#39;
+&gt;&gt;&gt; r.text
+&#39;{&quot;authenticated&quot;: true, ...&#39;
+&gt;&gt;&gt; r.json()
+{&#39;authenticated&#39;: True, ...}
+```
+
+Requests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` &amp; `POST` data — but nowadays, just use the `json` method!
+
+Requests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.
+
+## Installing Requests and Supported Versions
+
+Requests is available on PyPI:
+
+```console
+$ python -m pip install requests
+```
+
+Requests officially supports Python 3.10+.
+
+## Supported Features &amp; Best–Practices
+
+Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
+
+- Keep-Alive &amp; Connection Pooling
+- International Domains and URLs
+- Sessions with Cookie Persistence
+- Browser-style TLS/SSL Verification
+- Basic &amp; Digest Authentication
+- Familiar `dict`–like Cookies
+- Automatic Content Decompression and Decoding
+- Multi-part File Uploads
+- SOCKS Proxy Support
+- Connection Timeouts
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+fetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit timestamp (see
+[this issue](https://github.com/psf/requests/issues/2690) for more background):
+
+```shell
+git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git
+```
+
+You can also apply this setting to your global Git config:
+
+```shell
+git config --global fetch.fsck.badTimezone ignore
+```
+
+---
+
+[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)
+</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">dev-contributing</span> 开发者贡献文档
+          <span class="src-lines">L1-75</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst</div>
+        <pre class="src-text">.. _contributing:
+
+Contributor&#39;s Guide
+===================
+
+If you&#39;re reading this, you&#39;re probably interested in contributing to Requests.
+Thank you very much! Open source projects live-and-die based on the support
+they receive from others, and the fact that you&#39;re even considering
+contributing to the Requests project is *very* generous of you.
+
+This document lays out guidelines and advice for contributing to this project.
+If you&#39;re thinking of contributing, please start by reading this document and
+getting a feel for how contributing to this project works. If you have any
+questions, feel free to reach out to either `Nate Prewitt`_, `Ian Cordasco`_,
+or `Seth Michael Larson`_, the primary maintainers.
+
+.. _Ian Cordasco: https://www.coglib.com/~icordasc/
+.. _Nate Prewitt: https://www.nateprewitt.com/
+.. _Seth Michael Larson: https://sethmlarson.dev/
+
+The guide is split into sections based on the type of contribution you&#39;re
+thinking of making, with a section that covers general guidelines for all
+contributors.
+
+Code of Conduct
+---------------
+
+The Python community is made up of members from around the globe with a diverse
+contributors.
+
+Code of Conduct
+---------------
+
+The Python community is made up of members from around the globe with a diverse
+set of skills, personalities, and experiences. It is through these differences
+that our community experiences great successes and continued growth. When you&#39;re
+working with members of the community, follow the
+`Python Software Foundation Code of Conduct`_ to help steer your interactions
+and keep Python a positive, successful, and growing community.
+
+.. _Python Software Foundation Code of Conduct: https://policies.python.org/python.org/code-of-conduct/
+
+.. _early-feedback:
+
+Get Early Feedback
+------------------
+
+If you are contributing, do not feel the need to sit on your contribution until
+it is perfectly polished and complete. It helps everyone involved for you to
+seek feedback as early as you possibly can. Submitting an early, unfinished
+version of your contribution for feedback in no way prejudices your chances of
+getting that contribution accepted, and can save you from putting a lot of work
+into a contribution that is not suitable for the project.
+
+Contribution Suitability
+getting that contribution accepted, and can save you from putting a lot of work
+into a contribution that is not suitable for the project.
+
+Contribution Suitability
+------------------------
+
+Our project maintainers have the last word on whether or not a contribution is
+suitable for Requests. All contributions will be considered carefully, but from
+time to time, contributions will be rejected because they do not suit the
+current goals or needs of the project.
+
+If your contribution is rejected, don&#39;t despair! As long as you followed these
+guidelines, you will have a much better chance of getting your next
+contribution accepted.
+
+
+Code Contributions
+------------------
+
+Steps for Submitting Code
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When contributing code, you&#39;ll want to follow this checklist:
+
+1. Fork the repository on GitHub.
+2. Run the tests to confirm they all pass on your system. If they don&#39;t, you&#39;ll
+   need to investigate why they fail. If you&#39;re unable to diagnose this
+   yourself, raise it as a bug report by following the guidelines in this
+   document: :ref:`bug-reports`.
+3. Write tests that demonstrate your bug or feature. Ensure that they fail.</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">api-code</span> src/requests/api.py：API 实现
+          <span class="src-lines">L1-62</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py</div>
+        <pre class="src-text">&quot;&quot;&quot;
+requests.api
+~~~~~~~~~~~~
+
+This module implements the Requests API.
+
+:copyright: (c) 2012 by Kenneth Reitz.
+:license: Apache2, see LICENSE for more details.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from . import sessions
+from .models import Response
+
+if TYPE_CHECKING:
+    from typing_extensions import Unpack
+
+    from . import _types as _t
+
+
+def request(
+    method: str, url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]
+) -&gt; Response:
+    &quot;&quot;&quot;Constructs and sends a :class:`Request &lt;Request&gt;`.
+
+    :param method: method for the new :class:`Request` object: ``GET``, ``OPTIONS``, ``HEAD``, ``POST``, ``PUT``, ``PATCH``, or ``DELETE``.
+    :param url: URL for the new :class:`Request` object.
+    :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the :class:`Request`.
+    :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+        object to send in the body of the :class:`Request`.
+    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.
+        object to send in the body of the :class:`Request`.
+    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.
+    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.
+    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.
+    :param files: (optional) Dictionary of ``&#39;name&#39;: file-like-objects`` (or ``{&#39;name&#39;: file-tuple}``) for multipart encoding upload.
+        ``file-tuple`` can be a 2-tuple ``(&#39;filename&#39;, fileobj)``, 3-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;)``
+        or a 4-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;, custom_headers)``, where ``&#39;content_type&#39;`` is a string
+        defining the content type of the given file and ``custom_headers`` a dict-like object containing additional headers
+        to add for the file.
+    :param auth: (optional) Auth tuple to enable Basic/Digest/Custom HTTP Auth.
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+        timeout) &lt;timeouts&gt;` tuple.
+    :type timeout: float or tuple
+    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.
+    :type allow_redirects: bool
+    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
+    :param verify: (optional) Either a boolean, in which case it controls whether we verify
+            the server&#39;s TLS certificate, or a string, in which case it must be a path
+            to a CA bundle to use. Defaults to ``True``.
+    :param stream: (optional) if ``False``, the response content will be immediately downloaded.
+    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, (&#39;cert&#39;, &#39;key&#39;) pair.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="7">
+      <div class="q-head">
+        <h2>如何设置 timeout 并复用连接？</h2>
+        <div class="q-meta">B08 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 18.6s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 8</span>
+        <span class="chip paraphrase">改写 2</span>
+        <span class="chip danger">
+          无据 1</span>
+        <span class="chip neutral">事实句 11</span>
+        <span class="chip danger">格式 1</span>
+        <span class="chip ok">可照抄 7</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded" title="引用标识可在证据中找到：timeout">设置 timeout 需要通过 `timeout` 参数指定，其类型为浮点数或 `(connect_timeout, read_timeout)` 元组。<sup>有据</sup></span><span class="claim grounded" title="引用标识可在证据中找到：timeout">在 API 中，`timeout` 参数用于控制请求超时时间，包括连接建立时间和读取数据的时间。<sup>有据</sup></span><span class="claim grounded" title="引用标识可在证据中找到：Session、Session">复用连接可以通过创建 `Session` 对象来实现，并在 `Session` 上调用 `request()` 方法发送请求。<sup>有据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">使用示例如下：<sup>语义改写</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">```python<sup>有据</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：import">import requests<sup>有据</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：session、requests.session">session = requests.Session()<sup>有据</sup></span><span class="claim grounded format-error" title="引用标识可在证据中找到：https://http.bin.org/get&#39;, · 格式：https://http.bin.org/get">response = session.get(&#39;https://http.bin.org/get&#39;, timeout=(5, 10))<span class="claim-format">格式</span><sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">```<sup>有据</sup></span><span class="claim unsupported" title="断言的具体值在证据中找不到：5、10">上述代码中，`timeout` 参数的值分别为连接超时时间为 5 秒，读取超时时间为 10 秒。<sup>无据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">此方法确保了请求不会因为网络延迟而无限期等待服务器返回结果。<sup>语义改写</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">在使用 `requests` 库时，可以通过以下方式设置超时和复用连接：
+
+1. **设置超时**：
+   - 使用 `timeout` 参数来指定请求的超时时间（单位为秒）。例如，在发送请求时可以这样写：
+     ```python
+     import requests
+
+     response = requests.get(&#39;https://example.com&#39;, timeout=5)
+     ```
+     这里设置了请求的最大等待时间为 5 秒。
+
+2. **复用连接**：
+   - 可以通过设置 `session` 对象来启用连接复用。创建一个 `Session` 实例后，可以在多个请求中重用已建立的连接，从而提高效率。
+     ```python
+     session = requests.Session()
+     response = session.get(&#39;https://example.org&#39;)
+     ```
+
+3. **配置默认超时和连接池大小**：
+   - 在某些情况下，还可以通过 `proxies`, `verify`, 和其他参数进行更细粒度的控制。但通常来说，对于大多数场景，直接使用 `timeout` 和 `session` 已足够满足需求。
+
+综上所述，要同时设置超时并复用连接，只需创建一个 `Session` 对象，并为其设定合适的超时值即可。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">readme-install</span> 官方 README：安装与基础用法
+          <span class="src-lines">L1-77</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md</div>
+        <pre class="src-text"># Requests
+
+[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)
+[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)
+[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)
+[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)
+
+**Requests** is a simple, yet elegant, HTTP library.
+
+```python
+&gt;&gt;&gt; import requests
+&gt;&gt;&gt; r = requests.get(&#39;https://httpbin.org/basic-auth/user/pass&#39;, auth=(&#39;user&#39;, &#39;pass&#39;))
+&gt;&gt;&gt; r.status_code
+200
+&gt;&gt;&gt; r.headers[&#39;content-type&#39;]
+&#39;application/json; charset=utf8&#39;
+&gt;&gt;&gt; r.encoding
+&#39;utf-8&#39;
+&gt;&gt;&gt; r.text
+&#39;{&quot;authenticated&quot;: true, ...&#39;
+&gt;&gt;&gt; r.json()
+{&#39;authenticated&#39;: True, ...}
+```
+
+Requests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` &amp; `POST` data — but nowadays, just use the `json` method!
+
+Requests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.
+
+## Installing Requests and Supported Versions
+
+Requests is available on PyPI:
+
+```console
+$ python -m pip install requests
+```
+
+Requests officially supports Python 3.10+.
+
+## Supported Features &amp; Best–Practices
+
+Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
+
+- Keep-Alive &amp; Connection Pooling
+- International Domains and URLs
+- Sessions with Cookie Persistence
+- Browser-style TLS/SSL Verification
+- Basic &amp; Digest Authentication
+- Familiar `dict`–like Cookies
+- Automatic Content Decompression and Decoding
+- Multi-part File Uploads
+- SOCKS Proxy Support
+- Connection Timeouts
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+fetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit timestamp (see
+[this issue](https://github.com/psf/requests/issues/2690) for more background):
+
+```shell
+git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git
+```
+
+You can also apply this setting to your global Git config:
+
+```shell
+git config --global fetch.fsck.badTimezone ignore
+```
+
+---
+
+[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)
+</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">tests</span> 官方测试文件
+          <span class="src-lines">L1243-1277</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/tests/test_requests.py</div>
+        <pre class="src-text">                return r
+
+        req = requests.Request(&quot;GET&quot;, httpbin(&quot;headers&quot;))
+        assert not req.auth
+
+        s = requests.Session()
+        s.auth = DummyAuth()
+
+        prep = s.prepare_request(req)
+        resp = s.send(prep)
+
+        assert resp.json()[&quot;headers&quot;][&quot;Dummy-Auth-Test&quot;] == &quot;dummy-auth-test-ok&quot;
+
+    def test_prepare_request_with_bytestring_url(self):
+        req = requests.Request(&quot;GET&quot;, b&quot;https://httpbin.org/&quot;)
+        s = requests.Session()
+        prep = s.prepare_request(req)
+        assert prep.url == &quot;https://httpbin.org/&quot;
+
+    def test_request_with_bytestring_host(self, httpbin):
+        s = requests.Session()
+        resp = s.request(
+            &quot;GET&quot;,
+            httpbin(&quot;cookies/set?cookie=value&quot;),
+            allow_redirects=False,
+            headers={&quot;Host&quot;: b&quot;httpbin.org&quot;},
+        )
+        assert resp.cookies.get(&quot;cookie&quot;) == &quot;value&quot;
+
+    def test_links(self):
+        r = requests.Response()
+        r.headers = {
+            &quot;cache-control&quot;: &quot;public, max-age=60, s-maxage=60&quot;,
+            &quot;connection&quot;: &quot;keep-alive&quot;,
+            &quot;content-encoding&quot;: &quot;gzip&quot;,</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">api-code</span> src/requests/api.py：API 实现
+          <span class="src-lines">L34-90</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py</div>
+        <pre class="src-text">        object to send in the body of the :class:`Request`.
+    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.
+    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.
+    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.
+    :param files: (optional) Dictionary of ``&#39;name&#39;: file-like-objects`` (or ``{&#39;name&#39;: file-tuple}``) for multipart encoding upload.
+        ``file-tuple`` can be a 2-tuple ``(&#39;filename&#39;, fileobj)``, 3-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;)``
+        or a 4-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;, custom_headers)``, where ``&#39;content_type&#39;`` is a string
+        defining the content type of the given file and ``custom_headers`` a dict-like object containing additional headers
+        to add for the file.
+    :param auth: (optional) Auth tuple to enable Basic/Digest/Custom HTTP Auth.
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+        timeout) &lt;timeouts&gt;` tuple.
+    :type timeout: float or tuple
+    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.
+    :type allow_redirects: bool
+    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
+    :param verify: (optional) Either a boolean, in which case it controls whether we verify
+            the server&#39;s TLS certificate, or a string, in which case it must be a path
+            to a CA bundle to use. Defaults to ``True``.
+    :param stream: (optional) if ``False``, the response content will be immediately downloaded.
+    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, (&#39;cert&#39;, &#39;key&#39;) pair.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)
+      &gt;&gt;&gt; req
+      &lt;Response [200]&gt;
+    &quot;&quot;&quot;
+
+    # By using the &#39;with&#39; statement we are sure the session is closed, thus we
+    # avoid leaving sockets open which can trigger a ResourceWarning in some
+    # cases, and look like a memory leak in others.
+    with sessions.Session() as session:
+        return session.request(method=method, url=url, **kwargs)
+
+
+def get(
+    url: _t.UriType, params: _t.ParamsType = None, **kwargs: Unpack[_t.GetKwargs]
+) -&gt; Response:
+    r&quot;&quot;&quot;Sends a GET request.
+
+    :param url: URL for the new :class:`Request` object.
+    :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the :class:`Request`.
+    :param \*\*kwargs: Optional arguments that ``request`` takes.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+    &quot;&quot;&quot;
+
+    return request(&quot;get&quot;, url, params=params, **kwargs)
+
+
+def options(url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]) -&gt; Response:</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="8">
+      <div class="q-head">
+        <h2>Issue 中应该包含哪些复现信息？</h2>
+        <div class="q-meta">B09 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 24.6s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 2</span>
+        <span class="chip paraphrase">改写 6</span>
+        <span class="chip danger">
+          无据 1</span>
+        <span class="chip neutral">事实句 9</span>
+        
+        <span class="chip ok">可照抄 2</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded" title="与证据片段的用词高度重合">Issue 中应包含以下复现信息：<sup>有据</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：traceback">完整的错误堆栈（traceback）**：包括异常类型、消息和上下文；<sup>有据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">具体的代码示例**：能够复现问题的小型 Python 示例，包含必要的导入语句和请求调用；<sup>语义改写</sup></span><span class="claim unsupported" title="具体事实在证据中找不到对应表述">环境信息**：使用的 Python 版本、包管理器（pip 或 conda）、依赖库列表；<sup>无据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">行为描述**：预期结果 vs 实际结果，比如是否返回了正确的状态码、是否有超时、是否抛出异常等；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">触发条件**：何时发生此问题（如特定 URL、认证方式、网络状况等）；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">版本信息**：当前运行的 Requests 版本（通过 `pip show requests` 获取）；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">安装方式**：是否手动安装、虚拟环境、全局安装等；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">相关配置**：如果存在特殊设置（如代理、超时、编码等），请一并提供。<sup>语义改写</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">在 Issue 中应包含以下复现信息：
+1. 明确的描述：清晰说明遇到的问题或需要解决的情况。
+2. 环境信息：包括操作系统、Python 版本、Requests 版本等。
+3. 步骤重现：详细列出如何复现该问题的具体步骤。
+4. 错误信息（如果有）：如果存在错误提示，请一并提供。
+5. 预期行为与实际行为对比：说明期望的结果和实际观察到的行为差异。
+
+这些信息有助于开发人员快速理解问题，并进行排查和修复。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">contributing</span> 官方贡献指南
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md</div>
+        <pre class="src-text"># Contribution Guidelines
+
+Before opening any issues or proposing any pull requests, please read
+our [Contributor&#39;s Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)
+as well as our [AI Policy](/.github/AI_POLICY.md).
+
+To get the greatest chance of helpful responses, please also observe the
+following additional notes.
+
+## Questions
+
+The GitHub issue tracker is for *bug reports* and *feature requests*. Please do
+not use it to ask questions about how to use Requests. These questions should
+instead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure
+that your question is tagged with the `python-requests` tag when asking it on
+Stack Overflow, to ensure that it is answered promptly and accurately.
+
+## Good Bug Reports
+
+Please be aware of the following things when filing bug reports:
+
+1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature
+   to check whether your bug report or feature request has been mentioned in
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   report that you would have struggled to find the original, that&#39;s ok, but
+   if searching for a selection of words in your issue title would have found
+   the duplicate then the issue will likely be closed extremely abruptly.
+2. When filing bug reports about exceptions or tracebacks, please include the
+   *complete* traceback. Partial tracebacks, or just the exception text, are
+   not helpful. Issues that do not contain complete tracebacks may be closed
+   without warning.
+3. Make sure you provide a suitable amount of information to work with. This
+   means you should provide:
+
+   - Guidance on **how to reproduce the issue**. Ideally, this should be a
+     *small* code sample that can be run immediately by the maintainers.
+     Failing that, let us know what you&#39;re doing, how often it happens, what
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     what are we expecting to happen? What does &quot;success&quot; look like for your
+     code?
+   - Tell us **what actually happens**. It&#39;s not helpful for you to say &quot;it
+     doesn&#39;t work&quot; or &quot;it fails&quot;. Tell us *how* it fails: do you get an
+     exception? A hang? A non-200 status code? How was the actual result
+     different from your expected result?
+   - Tell us **what version of Requests you&#39;re using**, and
+     **how you installed it**. Different versions of Requests behave
+     differently and have different bugs, and some distributors of Requests
+     ship patches on top of the code we supply.
+
+   If you do not provide all of these things, it will take us much longer to
+   fix your problem. If we ask you to clarify these and you never respond, we
+   will close your issue without fixing it.
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+   request.
+2. When filing a pull request, always include tests that fail without your
+   changes thus preventing the fix from regressing.
+3. Always run the test suite locally
+4. Write commit messages that explain _why_ a change was made beyond &quot;Fixes
+   #NNNN&quot;. Why is this the right fix? What other options were ruled out? etc.
+</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">security</span> 官方安全政策
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md</div>
+        <pre class="src-text"># Vulnerability Disclosure
+
+If you think you have found a potential security vulnerability in
+requests, please open a [draft Security Advisory](https://github.com/psf/requests/security/advisories/new)
+via GitHub. We will coordinate verification and next steps through
+that secure medium.
+
+If English is not your first language, please try to describe the
+problem and its impact to the best of your ability. For greater detail,
+please use your native language and we will try our best to translate it
+using online services.
+
+Please also include the code you used to find the problem and the
+shortest amount of code necessary to reproduce it.
+
+Please do not disclose this to anyone else. We will retrieve a CVE
+identifier if necessary and give you full credit under whatever name or
+alias you provide. We will only request an identifier when we have a fix
+and can publish it in a release.
+
+We will respect your privacy and will only publicize your involvement if
+you grant us permission.
+
+## Process
+
+This following information discusses the process the requests project
+follows in response to vulnerability disclosures. If you are disclosing
+you grant us permission.
+
+## Process
+
+This following information discusses the process the requests project
+follows in response to vulnerability disclosures. If you are disclosing
+a vulnerability, this section of the documentation lets you know how we
+will respond to your disclosure.
+
+### Timeline
+
+When you report an issue, one of the project members will respond to you
+within two days *at the outside*. In most cases responses will be
+faster, usually within 12 hours. This initial response will at the very
+least confirm receipt of the report.
+
+If we were able to rapidly reproduce the issue, the initial response
+will also contain confirmation of the issue. If we are not, we will
+often ask for more information about the reproduction scenario.
+
+Our goal is to have a fix for any vulnerability released within two
+weeks of the initial disclosure. This may potentially involve shipping
+an interim release that simply disables function while a more mature fix
+can be prepared, but will in the vast majority of cases mean shipping a
+complete release as soon as possible.
+
+Throughout the fix process we will keep you up to speed with how the fix
+complete release as soon as possible.
+
+Throughout the fix process we will keep you up to speed with how the fix
+is progressing. Once the fix is prepared, we will notify you that we
+believe we have a fix. Often we will ask you to confirm the fix resolves
+the problem in your environment, especially if we are not confident of
+our reproduction scenario.
+
+At this point, we will prepare for the release. We will obtain a CVE
+number if one is required, providing you with full credit for the
+discovery. We will also decide on a planned release date, and let you
+know when it is. This release date will *always* be on a weekday.
+
+At this point we will reach out to our major downstream packagers to
+notify them of an impending security-related patch so they can make
+arrangements. In addition, these packagers will be provided with the
+intended patch ahead of time, to ensure that they are able to promptly
+release their downstream packages. Currently the list of people we
+actively contact *ahead of a public release* is:
+
+-   Python Maintenance Team, Red Hat (python-maint@redhat.com)
+-   Daniele Tricoli, Debian (@eriol)</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">readme-install</span> 官方 README：安装与基础用法
+          <span class="src-lines">L1-77</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md</div>
+        <pre class="src-text"># Requests
+
+[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)
+[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)
+[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)
+[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)
+
+**Requests** is a simple, yet elegant, HTTP library.
+
+```python
+&gt;&gt;&gt; import requests
+&gt;&gt;&gt; r = requests.get(&#39;https://httpbin.org/basic-auth/user/pass&#39;, auth=(&#39;user&#39;, &#39;pass&#39;))
+&gt;&gt;&gt; r.status_code
+200
+&gt;&gt;&gt; r.headers[&#39;content-type&#39;]
+&#39;application/json; charset=utf8&#39;
+&gt;&gt;&gt; r.encoding
+&#39;utf-8&#39;
+&gt;&gt;&gt; r.text
+&#39;{&quot;authenticated&quot;: true, ...&#39;
+&gt;&gt;&gt; r.json()
+{&#39;authenticated&#39;: True, ...}
+```
+
+Requests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` &amp; `POST` data — but nowadays, just use the `json` method!
+
+Requests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.
+
+## Installing Requests and Supported Versions
+
+Requests is available on PyPI:
+
+```console
+$ python -m pip install requests
+```
+
+Requests officially supports Python 3.10+.
+
+## Supported Features &amp; Best–Practices
+
+Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
+
+- Keep-Alive &amp; Connection Pooling
+- International Domains and URLs
+- Sessions with Cookie Persistence
+- Browser-style TLS/SSL Verification
+- Basic &amp; Digest Authentication
+- Familiar `dict`–like Cookies
+- Automatic Content Decompression and Decoding
+- Multi-part File Uploads
+- SOCKS Proxy Support
+- Connection Timeouts
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+fetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit timestamp (see
+[this issue](https://github.com/psf/requests/issues/2690) for more background):
+
+```shell
+git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git
+```
+
+You can also apply this setting to your global Git config:
+
+```shell
+git config --global fetch.fsck.badTimezone ignore
+```
+
+---
+
+[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)
+</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="9">
+      <div class="q-head">
+        <h2>提交代码前为什么要先写测试？</h2>
+        <div class="q-meta">B10 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 15.9s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 0</span>
+        <span class="chip paraphrase">改写 5</span>
+        <span class="chip danger">
+          无据 1</span>
+        <span class="chip neutral">事实句 6</span>
+        
+        <span class="chip ok">可照抄 0</span>
+      </div>
+        <div class="answer-text"><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">提交代码前先写测试是为了确保新功能不会引入已知问题，并防止修复后产生回归。<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">根据官方贡献指南，开发者需编写能复现问题且会导致测试失败的测试用例，然后运行完整的测试套件以验证更改是否稳定。<sup>语义改写</sup></span><span class="claim unsupported" title="具体事实在证据中找不到对应表述">这符合“先写能复现出问题的测试，再进行修改并重新运行所有测试”的流程，从而保障代码质量。<sup>无据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">此做法也体现在开发者的贡献文档中，强调了测试的重要性。<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">此外，在提交Pull Request之前，必须保证所有相关测试通过，这是维护团队共识的一部分。<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">因此，遵循这一过程有助于提高项目的整体健壮性和可靠性。<sup>语义改写</sup></span><span class="claim neutral" title="对证据充分性的说明，不计入">证据中未说明。<sup>说明</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">在提交代码之前编写测试是为了确保代码的正确性和稳定性。通过测试可以验证新功能是否按预期工作，并且能够及时发现潜在的问题或缺陷。这有助于提高软件质量、减少后期修复的工作量，并为团队成员提供信心，使他们更愿意使用和维护这些代码。此外，良好的测试实践还能帮助团队更好地理解系统行为，促进持续集成与交付流程。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">contributing</span> 官方贡献指南
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/CONTRIBUTING.md</div>
+        <pre class="src-text"># Contribution Guidelines
+
+Before opening any issues or proposing any pull requests, please read
+our [Contributor&#39;s Guide](https://requests.readthedocs.io/en/latest/dev/contributing/)
+as well as our [AI Policy](/.github/AI_POLICY.md).
+
+To get the greatest chance of helpful responses, please also observe the
+following additional notes.
+
+## Questions
+
+The GitHub issue tracker is for *bug reports* and *feature requests*. Please do
+not use it to ask questions about how to use Requests. These questions should
+instead be directed to [Stack Overflow](https://stackoverflow.com/). Make sure
+that your question is tagged with the `python-requests` tag when asking it on
+Stack Overflow, to ensure that it is answered promptly and accurately.
+
+## Good Bug Reports
+
+Please be aware of the following things when filing bug reports:
+
+1. Avoid raising duplicate issues. *Please* use the GitHub issue search feature
+   to check whether your bug report or feature request has been mentioned in
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   the past. Duplicate bug reports and feature requests are a huge maintenance
+   burden on the limited resources of the project. If it is clear from your
+   report that you would have struggled to find the original, that&#39;s ok, but
+   if searching for a selection of words in your issue title would have found
+   the duplicate then the issue will likely be closed extremely abruptly.
+2. When filing bug reports about exceptions or tracebacks, please include the
+   *complete* traceback. Partial tracebacks, or just the exception text, are
+   not helpful. Issues that do not contain complete tracebacks may be closed
+   without warning.
+3. Make sure you provide a suitable amount of information to work with. This
+   means you should provide:
+
+   - Guidance on **how to reproduce the issue**. Ideally, this should be a
+     *small* code sample that can be run immediately by the maintainers.
+     Failing that, let us know what you&#39;re doing, how often it happens, what
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     environment you&#39;re using, etc. Be thorough: it prevents us needing to ask
+     further questions.
+   - Tell us **what you expected to happen**. When we run your example code,
+     what are we expecting to happen? What does &quot;success&quot; look like for your
+     code?
+   - Tell us **what actually happens**. It&#39;s not helpful for you to say &quot;it
+     doesn&#39;t work&quot; or &quot;it fails&quot;. Tell us *how* it fails: do you get an
+     exception? A hang? A non-200 status code? How was the actual result
+     different from your expected result?
+   - Tell us **what version of Requests you&#39;re using**, and
+     **how you installed it**. Different versions of Requests behave
+     differently and have different bugs, and some distributors of Requests
+     ship patches on top of the code we supply.
+
+   If you do not provide all of these things, it will take us much longer to
+   fix your problem. If we ask you to clarify these and you never respond, we
+   will close your issue without fixing it.
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+
+## Good Pull Requests
+
+1. Avoid raising duplicate pull requests. *Please* use the GitHub pull request
+   search feature to check whether someone else has already filed a pull
+   request.
+2. When filing a pull request, always include tests that fail without your
+   changes thus preventing the fix from regressing.
+3. Always run the test suite locally
+4. Write commit messages that explain _why_ a change was made beyond &quot;Fixes
+   #NNNN&quot;. Why is this the right fix? What other options were ruled out? etc.
+</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">dev-contributing</span> 开发者贡献文档
+          <span class="src-lines">L46-125</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/docs/dev/contributing.rst</div>
+        <pre class="src-text">getting that contribution accepted, and can save you from putting a lot of work
+into a contribution that is not suitable for the project.
+
+Contribution Suitability
+------------------------
+
+Our project maintainers have the last word on whether or not a contribution is
+suitable for Requests. All contributions will be considered carefully, but from
+time to time, contributions will be rejected because they do not suit the
+current goals or needs of the project.
+
+If your contribution is rejected, don&#39;t despair! As long as you followed these
+guidelines, you will have a much better chance of getting your next
+contribution accepted.
+
+
+Code Contributions
+------------------
+
+Steps for Submitting Code
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When contributing code, you&#39;ll want to follow this checklist:
+
+1. Fork the repository on GitHub.
+2. Run the tests to confirm they all pass on your system. If they don&#39;t, you&#39;ll
+   need to investigate why they fail. If you&#39;re unable to diagnose this
+   yourself, raise it as a bug report by following the guidelines in this
+   document: :ref:`bug-reports`.
+3. Write tests that demonstrate your bug or feature. Ensure that they fail.
+   document: :ref:`bug-reports`.
+3. Write tests that demonstrate your bug or feature. Ensure that they fail.
+4. Make your change.
+5. Run the entire test suite again, confirming that all tests pass *including
+   the ones you just added*.
+6. Send a GitHub Pull Request to the main repository&#39;s ``main`` branch.
+   GitHub Pull Requests are the expected method of code collaboration on this
+   project.
+
+The following sub-sections go into more detail on some of the points above.
+
+Code Review
+~~~~~~~~~~~
+
+Contributions will not be merged until they&#39;ve been code reviewed. You should
+implement any code review feedback unless you strongly object to it. In the
+event that you object to the code review feedback, you should make your case
+clearly and calmly. If, after doing so, the feedback is judged to still apply,
+you must either apply the feedback or withdraw your contribution.
+
+Code Style
+~~~~~~~~~~
+
+Requests uses a collection of tools to ensure the code base has a consistent
+style as it grows. We have these orchestrated using a tool called
+`pre-commit`_. This can be installed locally and run over your changes prior
+style as it grows. We have these orchestrated using a tool called
+`pre-commit`_. This can be installed locally and run over your changes prior
+to opening a PR, and will also be run as part of the CI approval process
+before a change is merged.
+
+You can find the full list of formatting requirements specified in the
+`.pre-commit-config.yaml`_ at the top level directory of Requests.
+
+.. _pre-commit: https://pre-commit.com/
+.. _.pre-commit-config.yaml: https://github.com/psf/requests/blob/main/.pre-commit-config.yaml
+
+New Contributors
+~~~~~~~~~~~~~~~~
+
+If you are new or relatively new to Open Source, welcome! Requests aims to
+be a gentle introduction to the world of Open Source. If you&#39;re concerned about
+how best to contribute, please consider mailing a maintainer (listed above) and
+asking for help.
+
+Please also check the :ref:`early-feedback` section.
+
+
+Documentation Contributions
+---------------------------
+
+Documentation improvements are always welcome! The documentation files live in
+the ``docs/`` directory of the codebase. They&#39;re written in
+`reStructuredText`_, and use `Sphinx`_ to generate the full suite of</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">readme-install</span> 官方 README：安装与基础用法
+          <span class="src-lines">L1-77</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/README.md</div>
+        <pre class="src-text"># Requests
+
+[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)
+[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)
+[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)
+[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)
+[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)
+
+**Requests** is a simple, yet elegant, HTTP library.
+
+```python
+&gt;&gt;&gt; import requests
+&gt;&gt;&gt; r = requests.get(&#39;https://httpbin.org/basic-auth/user/pass&#39;, auth=(&#39;user&#39;, &#39;pass&#39;))
+&gt;&gt;&gt; r.status_code
+200
+&gt;&gt;&gt; r.headers[&#39;content-type&#39;]
+&#39;application/json; charset=utf8&#39;
+&gt;&gt;&gt; r.encoding
+&#39;utf-8&#39;
+&gt;&gt;&gt; r.text
+&#39;{&quot;authenticated&quot;: true, ...&#39;
+&gt;&gt;&gt; r.json()
+{&#39;authenticated&#39;: True, ...}
+```
+
+Requests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` &amp; `POST` data — but nowadays, just use the `json` method!
+
+Requests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` — according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.
+
+## Installing Requests and Supported Versions
+
+Requests is available on PyPI:
+
+```console
+$ python -m pip install requests
+```
+
+Requests officially supports Python 3.10+.
+
+## Supported Features &amp; Best–Practices
+
+Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
+
+- Keep-Alive &amp; Connection Pooling
+- International Domains and URLs
+- Sessions with Cookie Persistence
+- Browser-style TLS/SSL Verification
+- Basic &amp; Digest Authentication
+- Familiar `dict`–like Cookies
+- Automatic Content Decompression and Decoding
+- Multi-part File Uploads
+- SOCKS Proxy Support
+- Connection Timeouts
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+- Streaming Downloads
+- Automatic honoring of `.netrc`
+- Chunked HTTP Requests
+
+## Cloning the repository
+
+When cloning the Requests repository, you may need to add the `-c
+fetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit timestamp (see
+[this issue](https://github.com/psf/requests/issues/2690) for more background):
+
+```shell
+git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git
+```
+
+You can also apply this setting to your global Git config:
+
+```shell
+git config --global fetch.fsck.badTimezone ignore
+```
+
+---
+
+[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)
+</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="10">
+      <div class="q-head">
+        <h2>Apache-2.0 允许修改后再分发吗？</h2>
+        <div class="q-meta">B11 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 17.0s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 3</span>
+        <span class="chip paraphrase">改写 5</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 8</span>
+        
+        <span class="chip ok">可照抄 3</span>
+      </div>
+        <div class="answer-text"><span class="claim grounded" title="与证据片段的用词高度重合">Apache-2.0 许可证允许修改后再分发，但需遵守特定条件。<sup>有据</sup></span><span class="claim grounded" title="与证据片段的用词高度重合">根据 LICENSE 文件中的第 4 节数据：<sup>有据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">(a) 必须将所有副本的许可协议传递给接收者；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">(b) 修改过的文件必须清晰注明更改内容；<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">(c) 在源码形式的衍生作品中应保留原始版权、专利、商标和署名通知；<sup>语义改写</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：notice">(d) 若存在名为 &quot;NOTICE&quot; 的文本文件，则衍生作品也必须包含该文件中的所有版权声明，除非这些通知不属于衍生作品的一部分。<sup>有据</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">此外，在进行再分发时，可以增加自己的版权声明，并提供不同的使用、复制或分发许可条款。<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">此授权适用于所有受保护的专利权利，包括但不限于通过贡献者的贡献而产生的侵权行为。<sup>语义改写</sup></span><span class="claim neutral" title="建议性表述，不计入事实核验">如果发生专利诉讼，已授予的许可将在提起法律行动之日起终止。<sup>建议</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">是的，Apache-2.0 许可证允许修改并重新分发软件，但必须遵守许可证的条款和条件。具体来说，你可以自由地对代码进行修改，并在新的版本中再次发布，只要确保所有源文件都包含原始的 Apache-2.0 标志（即版权声明），并且你不能将任何部分以任何形式用于商业目的而未获得许可。此外，如果你使用了第三方库或组件，也应遵循其各自的许可证要求。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">license</span> 官方 LICENSE
+          <span class="src-lines">L1-126</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/LICENSE</div>
+        <pre class="src-text">
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+……（中间定义条款略，以下为与“再分发/分发”相关的条款）……
+
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">api-code</span> src/requests/api.py：API 实现
+          <span class="src-lines">L1-62</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/src/requests/api.py</div>
+        <pre class="src-text">&quot;&quot;&quot;
+requests.api
+~~~~~~~~~~~~
+
+This module implements the Requests API.
+
+:copyright: (c) 2012 by Kenneth Reitz.
+:license: Apache2, see LICENSE for more details.
+&quot;&quot;&quot;
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from . import sessions
+from .models import Response
+
+if TYPE_CHECKING:
+    from typing_extensions import Unpack
+
+    from . import _types as _t
+
+
+def request(
+    method: str, url: _t.UriType, **kwargs: Unpack[_t.RequestKwargs]
+) -&gt; Response:
+    &quot;&quot;&quot;Constructs and sends a :class:`Request &lt;Request&gt;`.
+
+    :param method: method for the new :class:`Request` object: ``GET``, ``OPTIONS``, ``HEAD``, ``POST``, ``PUT``, ``PATCH``, or ``DELETE``.
+    :param url: URL for the new :class:`Request` object.
+    :param params: (optional) Dictionary, list of tuples or bytes to send
+        in the query string for the :class:`Request`.
+    :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+        object to send in the body of the :class:`Request`.
+    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.
+        object to send in the body of the :class:`Request`.
+    :param json: (optional) A JSON serializable Python object to send in the body of the :class:`Request`.
+    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.
+    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.
+    :param files: (optional) Dictionary of ``&#39;name&#39;: file-like-objects`` (or ``{&#39;name&#39;: file-tuple}``) for multipart encoding upload.
+        ``file-tuple`` can be a 2-tuple ``(&#39;filename&#39;, fileobj)``, 3-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;)``
+        or a 4-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;, custom_headers)``, where ``&#39;content_type&#39;`` is a string
+        defining the content type of the given file and ``custom_headers`` a dict-like object containing additional headers
+        to add for the file.
+    :param auth: (optional) Auth tuple to enable Basic/Digest/Custom HTTP Auth.
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+        timeout) &lt;timeouts&gt;` tuple.
+    :type timeout: float or tuple
+    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.
+    :type allow_redirects: bool
+    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
+    :param verify: (optional) Either a boolean, in which case it controls whether we verify
+            the server&#39;s TLS certificate, or a string, in which case it must be a path
+            to a CA bundle to use. Defaults to ``True``.
+    :param stream: (optional) if ``False``, the response content will be immediately downloaded.
+    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, (&#39;cert&#39;, &#39;key&#39;) pair.
+    :return: :class:`Response &lt;Response&gt;` object
+    :rtype: requests.Response
+
+    Usage::
+
+      &gt;&gt;&gt; import requests
+      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;https://httpbin.org/get&#39;)</pre>
+      </details>
+      </div>
+    </article>
+
+    <article class="qpanel" data-panel="11">
+      <div class="q-head">
+        <h2>安全漏洞报告需要放哪些复现内容？</h2>
+        <div class="q-meta">B12 · 模型 Qwen3-VL-2B-Instruct (local) · 延迟 10.5s</div>
+      </div>
+      <div class="answer-block">
+        <div class="block-label"><span class="dot rag-dot"></span>OpenBridge（检索 + 模型 + 逐句核验）</div>
+        
+      <div class="verif-bar">
+        <span class="chip grounded">有据 1</span>
+        <span class="chip paraphrase">改写 5</span>
+        <span class="chip ok">
+          无据 0</span>
+        <span class="chip neutral">事实句 6</span>
+        
+        <span class="chip ok">可照抄 1</span>
+      </div>
+        <div class="answer-text"><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">安全漏洞报告需提交以下内容：<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">发现代码（用于验证问题的代码片段）<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">最短复现代码（能复现问题的最小示例代码）<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">问题与影响描述（包括风险等级、受影响范围等）<sup>语义改写</sup></span><span class="claim paraphrase" title="语义改写，未做字面覆盖，需人工判断">保密要求（禁止向第三方透露，除非获得授权）<sup>语义改写</sup></span><span class="claim grounded" title="关键英文术语出现在证据中：security、draft、advisory">根据官方《Security Policy》文档，所有信息均需通过 GitHub 的 Draft Security Advisory 页面提交，并确保符合上述要求。<sup>有据</sup></span></div>
+      </div>
+      <details class="baseline-block">
+        <summary><span class="dot base-dot"></span>对照：通用模型单独作答（无检索证据，点击展开）</summary>
+        <div class="answer-text baseline-text">在提交安全漏洞报告时，应包含以下复现内容：
+
+1. 漏洞的详细描述（包括受影响的系统、版本和环境）；
+2. 漏洞的具体行为或影响（如攻击路径、触发条件等）；
+3. 复现步骤（说明如何重现该漏洞）；
+4. 可验证的证明材料（例如日志、截图、错误消息等）；
+5. 漏洞的影响范围（如数据泄露、权限提升等）；
+6. 验证方法（用于确认漏洞的存在性）。
+
+这些内容有助于开发团队快速定位并修复漏洞。</div>
+      </details>
+      <div class="sources-block">
+        <div class="block-label">检索到的证据（固定快照，可点击展开核对原文）</div>
+        
+      <details class="src" open>
+        <summary><span class="src-id">security</span> 官方安全政策
+          <span class="src-lines">L1-67</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/.github/SECURITY.md</div>
+        <pre class="src-text"># Vulnerability Disclosure
+
+If you think you have found a potential security vulnerability in
+requests, please open a [draft Security Advisory](https://github.com/psf/requests/security/advisories/new)
+via GitHub. We will coordinate verification and next steps through
+that secure medium.
+
+If English is not your first language, please try to describe the
+problem and its impact to the best of your ability. For greater detail,
+please use your native language and we will try our best to translate it
+using online services.
+
+Please also include the code you used to find the problem and the
+shortest amount of code necessary to reproduce it.
+
+Please do not disclose this to anyone else. We will retrieve a CVE
+identifier if necessary and give you full credit under whatever name or
+alias you provide. We will only request an identifier when we have a fix
+and can publish it in a release.
+
+We will respect your privacy and will only publicize your involvement if
+you grant us permission.
+
+## Process
+
+This following information discusses the process the requests project
+follows in response to vulnerability disclosures. If you are disclosing
+you grant us permission.
+
+## Process
+
+This following information discusses the process the requests project
+follows in response to vulnerability disclosures. If you are disclosing
+a vulnerability, this section of the documentation lets you know how we
+will respond to your disclosure.
+
+### Timeline
+
+When you report an issue, one of the project members will respond to you
+within two days *at the outside*. In most cases responses will be
+faster, usually within 12 hours. This initial response will at the very
+least confirm receipt of the report.
+
+If we were able to rapidly reproduce the issue, the initial response
+will also contain confirmation of the issue. If we are not, we will
+often ask for more information about the reproduction scenario.
+
+Our goal is to have a fix for any vulnerability released within two
+weeks of the initial disclosure. This may potentially involve shipping
+an interim release that simply disables function while a more mature fix
+can be prepared, but will in the vast majority of cases mean shipping a
+complete release as soon as possible.
+
+Throughout the fix process we will keep you up to speed with how the fix
+complete release as soon as possible.
+
+Throughout the fix process we will keep you up to speed with how the fix
+is progressing. Once the fix is prepared, we will notify you that we
+believe we have a fix. Often we will ask you to confirm the fix resolves
+the problem in your environment, especially if we are not confident of
+our reproduction scenario.
+
+At this point, we will prepare for the release. We will obtain a CVE
+number if one is required, providing you with full credit for the
+discovery. We will also decide on a planned release date, and let you
+know when it is. This release date will *always* be on a weekday.
+
+At this point we will reach out to our major downstream packagers to
+notify them of an impending security-related patch so they can make
+arrangements. In addition, these packagers will be provided with the
+intended patch ahead of time, to ensure that they are able to promptly
+release their downstream packages. Currently the list of people we
+actively contact *ahead of a public release* is:
+
+-   Python Maintenance Team, Red Hat (python-maint@redhat.com)
+-   Daniele Tricoli, Debian (@eriol)</pre>
+      </details>
+      <details class="src" >
+        <summary><span class="src-id">license</span> 官方 LICENSE
+          <span class="src-lines">L43-111</span></summary>
+        <div class="src-meta">https://github.com/psf/requests/blob/611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60/LICENSE</div>
+        <pre class="src-text">      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one</pre>
+      </details>
+      </div>
+    </article>
+    <div class="foot">
+      OpenBridge 开源协作智能体 · 离线演示页 · 证据来自 Requests 官方仓库固定提交 611c6162cbc4ac2020a2f91c7cfa4f3abf9bbb60（Apache-2.0）<br>
+      本页仅用于离线查看真实评测记录，回答与引用需结合证据原文核对，不构成法律意见。
+    </div>
+  </main>
+</div>
+<script>
+document.querySelectorAll('.qnav').forEach((b)=>b.addEventListener('click',()=>{
+  const p=document.querySelector('.qpanel[data-panel="'+b.dataset.target+'"]');
+  if(p)p.scrollIntoView({behavior:'smooth',block:'start'});
+}));
+</script>
+</body>
+</html>

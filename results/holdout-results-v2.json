@@ -1,0 +1,248 @@
+{
+  "generatedAt": "2026-10-26T14:57:02.661Z",
+  "set": "holdout-questions-v2.json",
+  "summary": {
+    "cases": 20,
+    "recallAt1": 70,
+    "recallAt3": 95,
+    "mrr": 0.82,
+    "misses": 1
+  },
+  "results": [
+    {
+      "id": "J01",
+      "query": "Requests 每周大概有多少下载量？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J02",
+      "query": "用什么命令从源码安装 Requests？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "tests",
+        "api-code"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J03",
+      "query": "Requests 支持哪些 HTTP 方法？",
+      "expected": "api-code",
+      "ranked": [
+        "readme-install",
+        "tests",
+        "dev-contributing"
+      ],
+      "rank": 0,
+      "hit": false
+    },
+    {
+      "id": "J04",
+      "query": "怎么发送一个 HEAD 请求？",
+      "expected": "api-code",
+      "ranked": [
+        "api-code",
+        "tests",
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J05",
+      "query": "requests.delete 怎么用？",
+      "expected": "api-code",
+      "ranked": [
+        "api-code",
+        "tests",
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J06",
+      "query": "怎么给请求注册钩子函数？",
+      "expected": "api-code",
+      "ranked": [
+        "readme-install",
+        "api-code"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "J07",
+      "query": "Issue 模板里要求填哪几项？",
+      "expected": "contributing",
+      "ranked": [
+        "contributing",
+        "dev-contributing",
+        "security"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J08",
+      "query": "PR 的标题和描述应该怎么写？",
+      "expected": "contributing",
+      "ranked": [
+        "dev-contributing",
+        "contributing"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "J09",
+      "query": "什么算一个「好的 bug 报告」？",
+      "expected": "contributing",
+      "ranked": [
+        "contributing",
+        "dev-contributing",
+        "security"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J10",
+      "query": "安全公告的处理流程是什么？",
+      "expected": "security",
+      "ranked": [
+        "security",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J11",
+      "query": "漏洞修好之后多久会公开？",
+      "expected": "security",
+      "ranked": [
+        "security"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J12",
+      "query": "许可证里提到的 NOTICE 文件是干什么的？",
+      "expected": "license",
+      "ranked": [
+        "license",
+        "api-code",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J13",
+      "query": "Apache 2.0 提供专利授权吗？",
+      "expected": "license",
+      "ranked": [
+        "license",
+        "api-code",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J14",
+      "query": "许可证里是怎么声明不提供担保的？",
+      "expected": "license",
+      "ranked": [
+        "license",
+        "api-code",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J15",
+      "query": "怎么用 tox 跑测试？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "contributing",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "J16",
+      "query": "改了文档要不要跑检查？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "dev-contributing",
+        "security",
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J17",
+      "query": "test_requests.py 里都有哪些测试类？",
+      "expected": "tests",
+      "ranked": [
+        "contributing",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 3,
+      "hit": false
+    },
+    {
+      "id": "J18",
+      "query": "Session 和直接调用 requests.get 有什么区别？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "api-code",
+        "tests"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "J19",
+      "query": "怎么禁止自动重定向？",
+      "expected": "api-code",
+      "ranked": [
+        "readme-install",
+        "api-code",
+        "contributing"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "J20",
+      "query": "requests.request 的第一个参数是什么？",
+      "expected": "api-code",
+      "ranked": [
+        "api-code",
+        "tests",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    }
+  ]
+}

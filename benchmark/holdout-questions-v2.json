@@ -1,0 +1,22 @@
+[
+  {"id": "J01", "query": "Requests 每周大概有多少下载量？", "source": "readme-install"},
+  {"id": "J02", "query": "用什么命令从源码安装 Requests？", "source": "readme-install"},
+  {"id": "J03", "query": "Requests 支持哪些 HTTP 方法？", "source": "api-code"},
+  {"id": "J04", "query": "怎么发送一个 HEAD 请求？", "source": "api-code"},
+  {"id": "J05", "query": "requests.delete 怎么用？", "source": "api-code"},
+  {"id": "J06", "query": "怎么给请求注册钩子函数？", "source": "api-code"},
+  {"id": "J07", "query": "Issue 模板里要求填哪几项？", "source": "contributing"},
+  {"id": "J08", "query": "PR 的标题和描述应该怎么写？", "source": "contributing"},
+  {"id": "J09", "query": "什么算一个「好的 bug 报告」？", "source": "contributing"},
+  {"id": "J10", "query": "安全公告的处理流程是什么？", "source": "security"},
+  {"id": "J11", "query": "漏洞修好之后多久会公开？", "source": "security"},
+  {"id": "J12", "query": "许可证里提到的 NOTICE 文件是干什么的？", "source": "license"},
+  {"id": "J13", "query": "Apache 2.0 提供专利授权吗？", "source": "license"},
+  {"id": "J14", "query": "许可证里是怎么声明不提供担保的？", "source": "license"},
+  {"id": "J15", "query": "怎么用 tox 跑测试？", "source": "dev-contributing"},
+  {"id": "J16", "query": "改了文档要不要跑检查？", "source": "dev-contributing"},
+  {"id": "J17", "query": "test_requests.py 里都有哪些测试类？", "source": "tests"},
+  {"id": "J18", "query": "Session 和直接调用 requests.get 有什么区别？", "source": "readme-install"},
+  {"id": "J19", "query": "怎么禁止自动重定向？", "source": "api-code"},
+  {"id": "J20", "query": "requests.request 的第一个参数是什么？", "source": "api-code"}
+]

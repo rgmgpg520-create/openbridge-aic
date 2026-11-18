@@ -1,0 +1,123 @@
+{
+  "generatedAt": "2026-11-17T14:19:57.972Z",
+  "reviewerCount": 5,
+  "reviewers": [
+    {
+      "id": "student01",
+      "familiarity": 1,
+      "answered": 12,
+      "aborted": false
+    },
+    {
+      "id": "student02",
+      "familiarity": 2,
+      "answered": 12,
+      "aborted": false
+    },
+    {
+      "id": "student03",
+      "familiarity": 1,
+      "answered": 12,
+      "aborted": false
+    },
+    {
+      "id": "student04",
+      "familiarity": 2,
+      "answered": 12,
+      "aborted": false
+    },
+    {
+      "id": "student05",
+      "familiarity": 1,
+      "answered": 12,
+      "aborted": false
+    }
+  ],
+  "answeredCount": 60,
+  "preference": {
+    "openbridgeWins": 36,
+    "baselineWins": 24,
+    "ties": 0,
+    "openbridgeWinRate": 60,
+    "baselineWinRate": 40,
+    "tieRate": 0
+  },
+  "averageCorrectness": {
+    "openbridge": 4.3,
+    "baseline": 4.17
+  },
+  "byQuestion": {
+    "B01": {
+      "rag": 1,
+      "baseline": 4,
+      "tie": 0,
+      "n": 5
+    },
+    "B02": {
+      "rag": 0,
+      "baseline": 5,
+      "tie": 0,
+      "n": 5
+    },
+    "B03": {
+      "rag": 5,
+      "baseline": 0,
+      "tie": 0,
+      "n": 5
+    },
+    "B04": {
+      "rag": 5,
+      "baseline": 0,
+      "tie": 0,
+      "n": 5
+    },
+    "B05": {
+      "rag": 2,
+      "baseline": 3,
+      "tie": 0,
+      "n": 5
+    },
+    "B06": {
+      "rag": 3,
+      "baseline": 2,
+      "tie": 0,
+      "n": 5
+    },
+    "B07": {
+      "rag": 5,
+      "baseline": 0,
+      "tie": 0,
+      "n": 5
+    },
+    "B08": {
+      "rag": 0,
+      "baseline": 5,
+      "tie": 0,
+      "n": 5
+    },
+    "B09": {
+      "rag": 5,
+      "baseline": 0,
+      "tie": 0,
+      "n": 5
+    },
+    "B10": {
+      "rag": 5,
+      "baseline": 0,
+      "tie": 0,
+      "n": 5
+    },
+    "B11": {
+      "rag": 5,
+      "baseline": 0,
+      "tie": 0,
+      "n": 5
+    },
+    "B12": {
+      "rag": 0,
+      "baseline": 5,
+      "tie": 0,
+      "n": 5
+    }
+  }
+}

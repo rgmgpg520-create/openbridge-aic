@@ -1,0 +1,662 @@
+{
+  "generatedAt": "2026-10-27T15:40:12.793Z",
+  "set": "holdout-questions.json",
+  "summary": {
+    "cases": 55,
+    "recallAt1": 73,
+    "recallAt3": 98,
+    "mrr": 0.85,
+    "misses": 1
+  },
+  "results": [
+    {
+      "id": "H01",
+      "query": "第一次给 Requests 提 PR，流程是什么？",
+      "expected": "contributing",
+      "ranked": [
+        "dev-contributing",
+        "readme-install",
+        "contributing"
+      ],
+      "rank": 3,
+      "hit": false
+    },
+    {
+      "id": "H02",
+      "query": "requests 安装不上，应该怎么排查？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "api-code",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H03",
+      "query": "官方 README 里的示例代码怎么运行？",
+      "expected": "readme-install",
+      "ranked": [
+        "dev-contributing",
+        "security",
+        "contributing"
+      ],
+      "rank": 0,
+      "hit": false
+    },
+    {
+      "id": "H04",
+      "query": "Requests 的 License 是 MIT 吗？",
+      "expected": "license",
+      "ranked": [
+        "license",
+        "api-code",
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H05",
+      "query": "提交 Issue 时怎么提供复现步骤？",
+      "expected": "contributing",
+      "ranked": [
+        "contributing",
+        "readme-install",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H06",
+      "query": "发现安全问题应该发邮件还是提 Issue？",
+      "expected": "security",
+      "ranked": [
+        "contributing",
+        "security",
+        "dev-contributing"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H07",
+      "query": "维护者一般多久回复安全问题？",
+      "expected": "security",
+      "ranked": [
+        "security"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H08",
+      "query": "requests.get 的参数有哪些？",
+      "expected": "api-code",
+      "ranked": [
+        "readme-install",
+        "api-code",
+        "tests"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H09",
+      "query": "POST 请求用哪个函数？",
+      "expected": "api-code",
+      "ranked": [
+        "api-code",
+        "readme-install",
+        "tests"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H10",
+      "query": "测试用 pytest 还是 unittest？",
+      "expected": "tests",
+      "ranked": [
+        "tests",
+        "contributing",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H11",
+      "query": "怎么运行项目自带的测试套件？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "contributing",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H12",
+      "query": "贡献代码需要先 fork 吗？",
+      "expected": "contributing",
+      "ranked": [
+        "dev-contributing",
+        "contributing",
+        "security"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H13",
+      "query": "重复的 PR 怎么处理？",
+      "expected": "contributing",
+      "ranked": [
+        "contributing",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H14",
+      "query": "代码风格检查用什么工具？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "dev-contributing",
+        "security",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H15",
+      "query": "Python 版本要求是多少？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H16",
+      "query": "流式下载大文件怎么写？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H17",
+      "query": "Session 可以保持 Cookie 吗？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "tests",
+        "api-code"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H18",
+      "query": "怎么设置请求超时？",
+      "expected": "readme-install",
+      "ranked": [
+        "api-code",
+        "tests",
+        "readme-install"
+      ],
+      "rank": 3,
+      "hit": false
+    },
+    {
+      "id": "H19",
+      "query": "Commit 信息应该怎么写？",
+      "expected": "contributing",
+      "ranked": [
+        "contributing",
+        "readme-install",
+        "security"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H20",
+      "query": "仓库里的 LICENSE 文件有哪些义务？",
+      "expected": "license",
+      "ranked": [
+        "license",
+        "api-code",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H21",
+      "query": "怎么知道我的改动会不会破坏已有功能？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "contributing",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H22",
+      "query": "API 模块里都有哪些快捷方法？",
+      "expected": "api-code",
+      "ranked": [
+        "api-code"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H23",
+      "query": "这个库支持哪些 Python 版本？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H24",
+      "query": "被要求提供最小复现代码，应该怎么写？",
+      "expected": "contributing",
+      "ranked": [
+        "contributing",
+        "security",
+        "api-code"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H25",
+      "query": "安装 Requests 需要什么 Python 版本？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "dev-contributing",
+        "api-code"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H26",
+      "query": "用 pip 安装 Requests 的命令是什么？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "api-code",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H27",
+      "query": "怎么让 Session 自动保存 Cookie？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "tests",
+        "api-code"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H28",
+      "query": "怎么开启流式下载避免一次读进内存？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H29",
+      "query": "Requests 支持连接复用吗？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "tests",
+        "api-code"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H30",
+      "query": "README 里写的 Python 最低版本是哪一版？",
+      "expected": "readme-install",
+      "ranked": [
+        "readme-install",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H31",
+      "query": "requests.post 支持哪些参数？",
+      "expected": "api-code",
+      "ranked": [
+        "tests",
+        "api-code",
+        "readme-install"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H32",
+      "query": "怎么发送 JSON 数据而不是表单？",
+      "expected": "api-code",
+      "ranked": [
+        "api-code",
+        "tests",
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H33",
+      "query": "requests.request 的完整签名里有哪些参数？",
+      "expected": "api-code",
+      "ranked": [
+        "api-code",
+        "tests",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H34",
+      "query": "上传文件用哪个参数？",
+      "expected": "api-code",
+      "ranked": [
+        "api-code",
+        "tests",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H35",
+      "query": "怎么设置自定义请求头？",
+      "expected": "api-code",
+      "ranked": [
+        "readme-install",
+        "api-code"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H36",
+      "query": "提交 PR 之前要不要先建分支？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "dev-contributing",
+        "contributing",
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H37",
+      "query": "贡献代码前要跑哪些测试？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "dev-contributing",
+        "contributing",
+        "tests"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H38",
+      "query": "pre-commit 会检查什么？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "dev-contributing",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H39",
+      "query": "代码风格用什么工具检查？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "dev-contributing",
+        "security",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H40",
+      "query": "改动要提到 main 分支还是别的分支？",
+      "expected": "dev-contributing",
+      "ranked": [
+        "dev-contributing",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H41",
+      "query": "Issue 里为什么要贴完整 traceback？",
+      "expected": "contributing",
+      "ranked": [
+        "contributing",
+        "security",
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H42",
+      "query": "提交 PR 前怎么确认没有重复？",
+      "expected": "contributing",
+      "ranked": [
+        "contributing",
+        "dev-contributing",
+        "readme-install"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H43",
+      "query": "commit message 要不要解释原因？",
+      "expected": "contributing",
+      "ranked": [
+        "tests",
+        "contributing",
+        "readme-install"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H44",
+      "query": "报告 bug 时需要提供操作系统和工具链版本吗？",
+      "expected": "contributing",
+      "ranked": [
+        "readme-install",
+        "contributing",
+        "dev-contributing"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H45",
+      "query": "安全漏洞能不能直接发到公开 Issue？",
+      "expected": "security",
+      "ranked": [
+        "security",
+        "contributing",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H46",
+      "query": "报告漏洞时需要附上发现问题的代码吗？",
+      "expected": "security",
+      "ranked": [
+        "security",
+        "dev-contributing",
+        "license"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H47",
+      "query": "安全报告为什么要给最短复现代码？",
+      "expected": "security",
+      "ranked": [
+        "security",
+        "dev-contributing",
+        "license"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H48",
+      "query": "Apache 2.0 要求保留哪些声明？",
+      "expected": "license",
+      "ranked": [
+        "license",
+        "api-code"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H49",
+      "query": "修改源码后再分发需要标注改动吗？",
+      "expected": "license",
+      "ranked": [
+        "license",
+        "contributing",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H50",
+      "query": "可以把 Requests 的代码改成闭源再卖吗？",
+      "expected": "license",
+      "ranked": [
+        "license",
+        "security",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H51",
+      "query": "测试文件在仓库的什么位置？",
+      "expected": "tests",
+      "ranked": [
+        "tests",
+        "dev-contributing",
+        "contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H52",
+      "query": "项目里的测试是怎么组织的？",
+      "expected": "tests",
+      "ranked": [
+        "contributing",
+        "dev-contributing",
+        "tests"
+      ],
+      "rank": 3,
+      "hit": false
+    },
+    {
+      "id": "H53",
+      "query": "有没有关于超时行为的测试？",
+      "expected": "tests",
+      "ranked": [
+        "tests",
+        "contributing",
+        "dev-contributing"
+      ],
+      "rank": 1,
+      "hit": true
+    },
+    {
+      "id": "H54",
+      "query": "How do I keep the connection alive between requests?",
+      "expected": "readme-install",
+      "ranked": [
+        "contributing",
+        "readme-install",
+        "security"
+      ],
+      "rank": 2,
+      "hit": false
+    },
+    {
+      "id": "H55",
+      "query": "requests.get 默认会跟随重定向吗？",
+      "expected": "api-code",
+      "ranked": [
+        "readme-install",
+        "api-code",
+        "tests"
+      ],
+      "rank": 2,
+      "hit": false
+    }
+  ]
+}

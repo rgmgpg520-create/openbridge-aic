@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-10-28",
+  "note": "试用反馈表（主观部分）的结构化摘录。只收录本人在第 6 题勾选“同意”的条目；familiarity 取值须与 results/ab-reviews/*.json 中的 familiarity 一致。",
+  "entries": [
+    {
+      "reviewerId": "",
+      "familiarity": 2,
+      "wouldUse": "会，很方便",
+      "trustBasis": "更信任给出文件路径的那一份（原话为“更信任 A”，A/B 为每题随机编号，按其描述对应给出文件路径的一份）",
+      "doubt": "",
+      "friction": "暂时没有",
+      "oneChange": "",
+      "consent": true,
+      "source": "反馈表_已收_待确认归属.txt"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.tmp/
+.tmp-err/
+tmp/
+*.mp4
+*.zip
+model/weights/
+.DS_Store
+Thumbs.db
+
+# Word/WPS 打开文件时生成的临时锁文件
+~$*
+
+# 预览缓存
+.preview/
+
+# 报告构建中间件：仅忽略根目录由构建脚本直出的临时名；dist/ 下的正式报告（docx/pdf）纳入版本管理
+/OpenBridge_技术报告_附件2格式.docx

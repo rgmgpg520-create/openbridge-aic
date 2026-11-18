@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="OpenBridge 开源协作智能体离线演示">
+  <title>OpenBridge 开源桥</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <div class="brand-mark">OB</div>
+        <div>
+          <div class="brand-name">OpenBridge</div>
+          <div class="brand-subtitle">开源协作智能体</div>
+        </div>
+      </div>
+      <div class="topbar-meta">
+        <span class="mode-badge" id="modelStatus"><span class="status-dot"></span>检查本地模型…</span>
+        <button class="ghost-button" id="exportEvidence">导出证据包</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="project-switcher">
+          <div class="eyebrow">当前项目</div>
+          <div class="project-name" id="projectName">Requests HTTP 库</div>
+          <div class="project-url" id="projectUrl">github.com/psf/requests</div>
+        </div>
+        <nav class="nav-list" aria-label="主导航">
+          <button class="nav-item active" data-view="overview"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><rect x="3.4" y="3.4" width="7.2" height="7.2" rx="2.2"/><rect x="13.4" y="3.4" width="7.2" height="7.2" rx="2.2"/><rect x="3.4" y="13.4" width="7.2" height="7.2" rx="2.2"/><rect x="13.4" y="13.4" width="7.2" height="7.2" rx="2.2"/></svg></span>项目总览</button>
+          <button class="nav-item" data-view="evidence"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><path d="M6.5 3.6h7.2L18.6 8.4v12H6.5z"/><path d="M13.4 3.6v4.8h5.2"/><path d="M9.4 12.4h5.6"/><path d="M9.4 15.6h5.6"/></svg></span>证据浏览器</button>
+          <button class="nav-item" data-view="workbench"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><path d="M20.6 12.1c0 4-3.8 7.2-8.6 7.2-1 0-2-.15-2.9-.42L4.2 20.6l1.5-3.5c-1.4-1.3-2.3-3-2.3-5 0-4 3.8-7.2 8.6-7.2s8.6 3.2 8.6 7.2z"/></svg></span>协作工作台</button>
+          <button class="nav-item" data-view="validation"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><rect x="4.5" y="4" width="15" height="16.5" rx="3.2"/><path d="M8.8 12.2l2.4 2.4 4.4-4.9"/></svg></span>效果验证</button>
+          <button class="nav-item" data-view="compliance"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><path d="M6.3 3.6h7.1L18.8 9v11.4H6.3z"/><path d="M13.2 3.6V9h5.4"/><path d="M9.4 14.1l1.9 1.9 3.4-3.8"/></svg></span>许可与风险</button>
+        </nav>
+        <div class="sidebar-footer">
+          <label class="import-button" for="projectFile">导入项目 JSON</label>
+          <input id="projectFile" type="file" accept="application/json,.json" hidden>
+          <div class="sidebar-note">导入资料会发给本机服务和当前配置的模型。导入前请先脱敏。</div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <section class="view active" id="view-overview">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">PROJECT OVERVIEW</div>
+              <h1>让第一次贡献更容易</h1>
+              <p>OpenBridge 把开源项目资料、AI 检索、逐句证据核验和贡献流程放在一条可追溯的工作流里。</p>
+            </div>
+            <div class="heading-actions">
+              <button class="primary-button" data-view-target="workbench">开始提问 <span>→</span></button>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric-card"><div class="metric-label">已索引资料</div><div class="metric-value" id="docCount">7</div><div class="metric-foot">来自 Requests 固定版本快照</div></div>
+            <div class="metric-card"><div class="metric-label">可执行动作</div><div class="metric-value">4</div><div class="metric-foot">问答 · Issue · 测试 · 合规</div></div>
+            <div class="metric-card"><div class="metric-label">基线引用率</div><div class="metric-value" id="citationRate">待测</div><div class="metric-foot">运行评测后显示</div></div>
+            <div class="metric-card"><div class="metric-label">风险拦截</div><div class="metric-value">3</div><div class="metric-foot">密钥、隐私、越权提交</div></div>
+          </div>
+
+          <div class="overview-grid">
+          <div class="panel hero-panel">
+              <div class="panel-header"><div><div class="eyebrow">AGENT WORKFLOW</div><h2>从资料到可审计行动</h2></div><span class="panel-kicker">4 steps</span></div>
+              <div class="workflow-track">
+                <div class="workflow-step"><div class="step-number">01</div><div><strong>理解</strong><span>识别用户目标与风险</span></div></div>
+                <div class="workflow-line"></div>
+                <div class="workflow-step"><div class="step-number">02</div><div><strong>检索</strong><span>从项目资料中找证据</span></div></div>
+                <div class="workflow-line"></div>
+                <div class="workflow-step"><div class="step-number">03</div><div><strong>生成</strong><span>形成回答或贡献草稿</span></div></div>
+                <div class="workflow-line"></div>
+                <div class="workflow-step"><div class="step-number">04</div><div><strong>核验</strong><span>逐句核对证据，标出无依据的具体事实</span></div></div>
+              </div>
+              <div class="hero-callout"><span class="callout-icon">i</span><span id="workflowIntro">系统检索项目固定版本的真实源码和维护文档，再交给本地 Qwen 模型组织答案；外发动作必须人工确认。</span></div>
+            </div>
+            <div class="panel project-panel">
+              <div class="panel-header"><div><div class="eyebrow">PROJECT PROFILE</div><h2 id="projectDisplayName">Requests HTTP 库</h2></div><span class="license-pill" id="licensePill">Apache-2.0</span></div>
+              <div class="profile-row"><span>项目地址</span><a id="projectLink" href="https://github.com/psf/requests" target="_blank" rel="noreferrer">打开仓库 ↗</a></div>
+              <div class="profile-row"><span>资料类型</span><strong id="typeSummary">README · DOC · ISSUE · LICENSE</strong></div>
+              <div class="profile-row"><span>合规状态</span><strong class="success-text">已核验</strong></div>
+              <div class="profile-divider"></div>
+              <div class="profile-caption">演示数据</div>
+              <p class="profile-note" id="snapshotNote">为保证离线演示可复现，系统只保留公开仓库的必要摘要、链接和可验证元数据。</p>
+            </div>
+          </div>
+
+          <div class="panel quick-panel">
+            <div class="panel-header"><div><div class="eyebrow">QUICK START</div><h2>试试三个真实任务</h2></div><button class="text-button" data-view-target="workbench">进入工作台 →</button></div>
+            <div class="quick-grid">
+              <button class="quick-card" data-task="usage" data-query="Requests 怎么安装？"><span class="quick-number">01</span><span><strong>新手入门</strong><small>生成安装与最小示例</small></span><span class="quick-arrow">↗</span></button>
+              <button class="quick-card" data-task="issue" data-query="我想提交一个 Issue，需要写什么？"><span class="quick-number">02</span><span><strong>准备贡献</strong><small>生成可复现 Issue 草稿</small></span><span class="quick-arrow">↗</span></button>
+              <button class="quick-card" data-task="license" data-query="Apache-2.0 可以修改后再分发吗？"><span class="quick-number">03</span><span><strong>检查许可</strong><small>查看义务与公开边界</small></span><span class="quick-arrow">↗</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-evidence">
+          <div class="page-heading compact-heading"><div><div class="eyebrow">EVIDENCE BROWSER</div><h1>每个结论都能回到原文</h1><p>浏览固定快照的索引资料、分块与真实行号，并按问题复现命中的证据窗口。</p></div><span class="panel-kicker" id="evidenceMeta">尚未载入</span></div>
+          <div class="panel replay-panel">
+            <div class="panel-header"><div><div class="eyebrow">RETRIEVAL REPLAY</div><h2>按问题复现证据</h2></div><span class="trace-state" id="evidenceState">等待查询</span></div>
+            <form class="chat-input-row" id="evidenceForm"><input id="evidenceQuery" placeholder="输入问题，例如：安全漏洞应该怎么报告？" autocomplete="off"><button class="primary-button" type="submit">检索 <span>↗</span></button></form>
+            <div class="evidence-hits" id="evidenceHits"><div class="draft-empty">输入问题后，这里显示命中的资料、BM25 分值、坐标行号与证据窗口原文。该检索不调用模型，可在无 GPU 时复现。</div></div>
+          </div>
+          <div class="evidence-grid">
+            <div class="panel source-panel">
+              <div class="panel-header"><div><div class="eyebrow">CORPUS</div><h2>索引资料</h2></div><span class="panel-kicker" id="corpusMeta"></span></div>
+              <div class="source-list" id="sourceList"><div class="draft-empty">载入后显示每条资料的来源、分块数和字符数。</div></div>
+            </div>
+            <div class="panel chunk-panel">
+              <div class="panel-header"><div><div class="eyebrow">CHUNKS</div><h2 id="chunkTitle">分块明细</h2></div><span class="panel-kicker" id="chunkMeta">选择左侧资料</span></div>
+              <div class="chunk-list" id="chunkList"><div class="draft-empty">选择左侧资料，查看每个分块的行号范围与原文。</div></div>
+            </div>
+          </div>
+          <div class="panel methodology-panel"><div class="panel-header"><div><div class="eyebrow">PROVENANCE</div><h2>引用链口径</h2></div></div><div class="method-grid"><div><strong>固定快照</strong><span>语料来自 Requests 官方仓库固定提交，随包保留必要源文件与原始 LICENSE。</span></div><div><strong>分块与行号</strong><span>每条资料按约 1.1k 字符切块并保留真实起止行号，便于回到原文核对。</span></div><div><strong>检索证据</strong><span>BM25 以中文二元组和英文词打分，取每条资料的最高分块；此处只展示检索与证据，不调用模型。</span></div><div><strong>人工确认</strong><span>证据窗口是候选依据，最终结论仍需人工核对上游现状后再对外提交。</span></div></div></div>
+        </section>
+
+        <section class="view" id="view-workbench">
+          <div class="page-heading compact-heading"><div><div class="eyebrow">COLLABORATION WORKBENCH</div><h1>把问题变成下一步</h1><p>每个回答都带有证据、风险和可执行动作。</p></div></div>
+          <div class="workbench-grid">
+          <div class="panel chat-panel">
+              <div class="panel-header"><div><div class="eyebrow">ASK OPENBRIDGE</div><h2>开源协作问答</h2></div><span class="live-pill"><span class="status-dot"></span>项目 RAG</span></div>
+              <div class="chat-history" id="chatHistory"><div class="empty-chat"><div class="empty-icon">✦</div><strong>先问一个问题</strong><span>例如：贡献代码前要做哪些准备？</span></div></div>
+              <form class="chat-input-row" id="chatForm"><input id="chatInput" placeholder="输入关于项目、Issue、测试或许可证的问题" autocomplete="off"><button class="primary-button" type="submit">发送 <span>↗</span></button></form>
+            </div>
+            <div class="panel trace-panel"><div class="panel-header"><div><div class="eyebrow">TRACE</div><h2>代理轨迹</h2></div><span class="trace-state" id="traceState">等待任务</span></div><div class="trace-list" id="traceList"><div class="trace-empty">执行任务后，这里会显示理解、检索、生成和核验记录。</div></div></div>
+          </div>
+          <div class="panel action-panel"><div class="panel-header"><div><div class="eyebrow">ACTION DRAFTS</div><h2>贡献动作草稿</h2></div><span class="panel-kicker">人工确认后才能外发</span></div><div id="draftArea" class="draft-area"><div class="draft-empty">从上面的问答中生成 Issue 草稿，或点击下方模板。</div></div><div class="draft-actions"><button class="secondary-button" id="generateIssue">生成 Issue 草稿</button><button class="secondary-button" id="generateTest">生成测试清单</button></div></div>
+        </section>
+
+        <section class="view" id="view-validation">
+          <div class="page-heading compact-heading"><div><div class="eyebrow">VALIDATION</div><h1>效果验证</h1><p>测试集、引用链和安全规则都可以复现。</p></div><button class="primary-button" id="runValidation">运行全部测试 <span>▶</span></button></div>
+          <div class="validation-grid"><div class="panel score-panel"><div class="panel-header"><div><div class="eyebrow">OFFLINE CHECKS</div><h2>离线检索基线</h2></div><span class="trace-state" id="validationState">尚未运行</span></div><div class="score-ring" id="scoreRing"><div><strong id="scoreValue">--</strong><span>通过率</span></div></div><div class="validation-metrics" id="validationMetrics"><span><b>--</b><small>首位命中率</small></span><span><b>--</b><small>来源召回率</small></span><span><b>--</b><small>证据覆盖率</small></span><span><b>--</b><small>护栏通过率</small></span><span><b>--</b><small>提示注入</small></span><span><b>--</b><small>无据不答</small></span></div><div class="category-strip" id="categoryStrip"></div><div class="score-caption">检查分块检索是否命中预期来源、证据片段是否覆盖事实词，以及敏感输入护栏；不代表模型准确率。无证据用例的合成答案自检结果单独标注，不计入通过率。</div></div><div class="panel results-panel"><div class="panel-header"><div><div class="eyebrow">TEST CASES</div><h2>测试明细</h2></div><span class="panel-kicker" id="testCount">32 cases</span></div><div class="results-table-wrap"><table class="results-table"><thead><tr><th>编号</th><th>类型</th><th>任务</th><th>引用</th><th>检查项</th><th>结果</th></tr></thead><tbody id="resultsBody"><tr><td colspan="6" class="table-empty">点击“运行全部测试”查看结果。</td></tr></tbody></table></div><div class="table-legend">结果口径：<b>检索类</b>＝预期来源全部进入前 3 条；<b>注入类</b>＝来源命中 + 注入特征被识别 + 答案不复述系统提示词；<b>无据类</b>＝语料不含该事实、且答案未编造该说法——它的“通过”表示<b>没有编造</b>，不代表答对了这个问题。“检查项”列在检索/注入类显示命中的证据词数，在无据类显示被检查的编造说法。鼠标悬停任意一行可看该行的具体检查内容。</div></div></div>
+          <div class="panel methodology-panel"><div class="panel-header"><div><div class="eyebrow">METHOD</div><h2>验证口径</h2></div></div><div class="method-grid"><div><strong>检索来源</strong><span>检查固定问题是否检索到项目数据中指定的预期来源，并记录是否排在第 1 位。</span></div><div><strong>多跳与中英混问</strong><span>多跳用例要求两个来源同时进入前 3 条；中英混问检查中文问法与英文原文之间的检索是否稳定。</span></div><div><strong>注入与无证据</strong><span>提示注入用例检查注入特征被识别、检索仍被证据约束，且规则答案不复述注入内容；无证据用例断言语料与规则答案都不含该事实。离线校验不调用模型，在线生成在注入前缀下仍可能抄错命令，属已知限制。</span></div><div><strong>护栏与模型对照</strong><span>敏感输入护栏单独计分；模型对照需启动本地模型并运行 scripts/benchmark.mjs。</span></div></div></div>
+        </section>
+
+        <section class="view" id="view-compliance">
+          <div class="page-heading compact-heading"><div><div class="eyebrow">LICENSE & RISK</div><h1>许可与风险</h1><p>先确认能不能用，再决定怎么开放。</p></div></div>
+          <div class="compliance-grid"><div class="panel resource-panel"><div class="panel-header"><div><div class="eyebrow">RESOURCE REGISTER</div><h2>资源使用清单</h2></div><span class="panel-kicker" id="resourceCount">6 items</span></div><div class="resource-list" id="resourceList"></div></div><div class="panel risk-panel"><div class="panel-header"><div><div class="eyebrow">GUARDRAILS</div><h2>风险护栏</h2></div><span class="license-pill">已启用</span></div><div class="risk-list"><div class="risk-item"><span class="risk-icon amber" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><path d="M12 4.2 21 19.6H3z"/><path d="M12 10v4.2"/><path d="M12 17.2h.01"/></svg></span><div><strong>提示注入</strong><p>项目原文只作为证据，不改变系统规则。</p></div></div><div class="risk-item"><span class="risk-icon red" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><rect x="5" y="10.4" width="14" height="9.8" rx="2.6"/><path d="M8.4 10.4V8a3.6 3.6 0 0 1 7.2 0v2.4"/><path d="M12 14.4v2.2"/></svg></span><div><strong>密钥与隐私</strong><p>发现 token、个人信息或生产日志时，提示脱敏并阻止直接外发。</p></div></div><div class="risk-item"><span class="risk-icon blue" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><path d="M14.2 4.2h5.6v5.6"/><path d="M19.8 4.2 11 13"/><path d="M18 14.6V19a1.6 1.6 0 0 1-1.6 1.6H5A1.6 1.6 0 0 1 3.4 19V7.6A1.6 1.6 0 0 1 5 6h4.4"/></svg></span><div><strong>外部动作</strong><p>不自动提交 Issue、Pull Request 或修改仓库，必须人工确认。</p></div></div><div class="risk-item"><span class="risk-icon green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" focusable="false"><circle cx="12" cy="12" r="8.2"/><path d="M8.4 12.3l2.6 2.6 4.6-5.2"/></svg></span><div><strong>来源引用</strong><p>回答附项目资料文件和证据片段。</p></div></div></div></div></div>
+          <div class="panel open-panel"><div class="panel-header"><div><div class="eyebrow">OPEN CONTRIBUTION</div><h2>开放成果</h2></div></div><div class="open-grid"><div><strong>代码</strong><span>MIT 许可的检索、模型适配、护栏和评测代码。</span></div><div><strong>数据</strong><span>固定版本索引、测试集和可追溯来源。</span></div><div><strong>模型</strong><span>本地 Qwen3-VL-2B-Instruct，模型权重另行按许可获取。</span></div><div><strong>社区</strong><span>生成的建议经人工复核后再考虑提交给 Requests 上游。</span></div></div></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
